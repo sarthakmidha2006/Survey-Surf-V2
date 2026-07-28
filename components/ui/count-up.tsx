@@ -16,7 +16,7 @@ function group(n: string): string {
 function parseStat(value: string) {
   const m = value.match(/^(\D*?)([\d.,]+)(.*)$/s);
   if (!m) return { prefix: "", num: null as number | null, suffix: "", decimals: 0, sep: false };
-  const [, prefix, core, suffix] = m;
+  const [, prefix = "", core = "", suffix = ""] = m;
   const sep = core.includes(",");
   const bare = core.replace(/,/g, "");
   const dot = bare.indexOf(".");

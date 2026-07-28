@@ -48,9 +48,21 @@ const runtimeEnv = {
 
 const mergedSchema = serverSchema.merge(clientSchema);
 
-const parsed = isServer
-  ? mergedSchema.safeParse(runtimeEnv)
-  : clientSchema.safeParse(runtimeEnv);
+/**
+ * Skip validation when explicitly requested (e.g. `next build`, where route
+ * modules are imported to collect page data before any runtime secrets exist).
+ * The running serverless functions still validate on cold start, so real
+ * misconfiguration is caught at request time rather than masked.
+ */
+const skipValidation = !!process.env.SKIP_ENV_VALIDATION;
+
+type Env = z.infer<typeof mergedSchema>;
+
+const parsed = skipValidation
+  ? { success: true as const, data: runtimeEnv as unknown as Env }
+  : isServer
+    ? mergedSchema.safeParse(runtimeEnv)
+    : clientSchema.safeParse(runtimeEnv);
 
 if (!parsed.success) {
   console.error(
@@ -59,8 +71,6 @@ if (!parsed.success) {
   );
   throw new Error("Invalid environment variables. See errors above.");
 }
-
-type Env = z.infer<typeof mergedSchema>;
 
 export const env = new Proxy(parsed.data as Env, {
   get(target, prop) {

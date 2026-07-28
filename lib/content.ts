@@ -26,7 +26,6 @@ import type {
   JohariBlind,
   JohariQuad,
   LeaderItem,
-  ListeningContent,
   MethodStage,
   PerceptionBar,
   ProofCell,

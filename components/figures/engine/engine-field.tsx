@@ -10,7 +10,6 @@ import {
   CORE,
   PAD,
   sample,
-  signalClusterIndex,
   type Particle,
 } from "@/components/figures/engine/engine-geometry";
 import { synthClusters } from "@/lib/content";

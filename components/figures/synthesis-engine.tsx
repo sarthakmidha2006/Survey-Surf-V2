@@ -98,7 +98,6 @@ export function SynthesisEngine() {
     if (!ctx) return;
 
     const field = buildField();
-    const signalIdx = synthClusters.findIndex((c) => c.signal);
     let cssW = 0;
     let cssH = 0;
 
