@@ -145,7 +145,7 @@ export function HeroScene() {
   return (
     <figure
       className={cn("hs", ready && "is-ready", reduced && "is-reduced")}
-      aria-label="How Survey Surf turns millions of scattered opinions into one market perception"
+      aria-label="How Sibero turns millions of scattered opinions into one market perception"
     >
       <figcaption className="hs-caption">
         FIG. A · The perception apparatus — scattered signals resolved into one

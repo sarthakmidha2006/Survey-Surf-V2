@@ -1,24 +1,29 @@
-import { Container } from "@/components/ui/container";
-import { Folio } from "@/components/ui/folio";
-import { PenMark } from "@/components/ui/pen-mark";
 import { Reveal } from "@/components/ui/reveal";
-import { Rule } from "@/components/ui/rule";
-import { transcript } from "@/lib/content";
+import { statement } from "@/lib/content";
 
-/** The ink spread — a single verbatim, printed on black. */
-export function TranscriptSpread() {
+/**
+ * The turn — the issue's emotional midpoint.
+ *
+ * One typographic block of two balanced lines, set on a compact dark band. The
+ * block is offset off the publication's left margin and runs to the far side of
+ * the measure, so it reads as an editorial headline rather than a centred
+ * quotation. The single ultra-thin rule left standing on that margin is the
+ * only other mark in the section, and it is what balances a long horizontal
+ * mass with a vertical. The last word takes the one accent.
+ *
+ * Two spans and a rule — everything else is geometry in `.st-*`.
+ */
+export function StatementSpread() {
   return (
-    <section className="spread-ink" aria-label="From the transcript">
-      <Container>
-        <Folio left={transcript.folio.left} right={transcript.folio.right} />
-        <Rule />
-        <Reveal as="blockquote" className="transcript-q">
-          {transcript.quoteLead}
-          <PenMark variant="underline">{transcript.penText}</PenMark>
-          {transcript.quoteTail}
-        </Reveal>
-        <p className="transcript-att">{transcript.attribution}</p>
-      </Container>
+    <section className="statement" aria-label="What the market chose">
+      <span className="st-rule" aria-hidden="true" />
+      <Reveal as="p" className="st-quote" chapter>
+        <span className="st-line">{statement.lineOne}</span>
+        <span className="st-line">
+          {statement.lineTwo.lead}{" "}
+          <span className="st-word">{statement.lineTwo.accent}</span>
+        </span>
+      </Reveal>
     </section>
   );
 }

@@ -2,23 +2,19 @@ import {
   AbsoluteBars,
   RelativeBars,
 } from "@/components/figures/perception-bars";
-import { Plate, PlateCaption } from "@/components/ui/plate";
+import { Plate } from "@/components/ui/plate";
 import { Reveal } from "@/components/ui/reveal";
 import { Chapter } from "@/components/ui/section";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Tabs } from "@/components/ui/tabs";
 import { sectionIds } from "@/lib/constants";
-import {
-  multiplierCaption,
-  multiplierOpener,
-  perceptionPanelLabel,
-} from "@/lib/content";
+import { multiplierOpener, perceptionPanelLabel } from "@/lib/content";
 
-/** Chapter 04 — the multiplier: perception read absolute, then relative. */
+/** The multiplier: perception read absolute, then relative. */
 export function MultiplierSection() {
   return (
-    <Chapter id={sectionIds.multiplier}>
-      <SectionHeader opener={multiplierOpener} />
+    <Chapter id={sectionIds.multiplier} className="chapter--flow">
+      <SectionHeader opener={multiplierOpener} variant="quiet" />
 
       <Reveal as="figure" className="fig-plate draw-bars">
         <Plate>
@@ -34,10 +30,6 @@ export function MultiplierSection() {
             ]}
           />
         </Plate>
-        <PlateCaption>
-          <strong>{multiplierCaption.strong}</strong>
-          {multiplierCaption.rest}
-        </PlateCaption>
       </Reveal>
     </Chapter>
   );

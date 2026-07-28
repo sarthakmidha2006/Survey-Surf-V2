@@ -18,17 +18,20 @@ export const contactSchema = z.object({
     .max(160, "Keep the company name under 160 characters.")
     .optional()
     .or(z.literal("")),
+  // "Additional context" — optional free text.
   competitor: z
     .string()
     .trim()
-    .max(160, "Keep this under 160 characters.")
+    .max(4000, "That’s a little too long.")
     .optional()
     .or(z.literal("")),
+  // "What are you trying to understand about your market?" — optional.
   message: z
     .string()
     .trim()
-    .min(10, "A sentence or two helps us prepare.")
-    .max(4000, "That message is too long."),
+    .max(4000, "That message is too long.")
+    .optional()
+    .or(z.literal("")),
   // Honeypot — hidden from people. Accepted by the schema (so it never
   // surfaces as a validation error), then handled explicitly by the
   // action/route: any value means a bot, and the submission is dropped.

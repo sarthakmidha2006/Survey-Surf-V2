@@ -263,7 +263,7 @@ export function SynthesisEngine() {
       <div className="ec-head">
         <span className="ec-title">
           <i className="ec-live" />
-          Synthesis engine · SS-SYNTH
+          Synthesis engine · SB-SYNTH
         </span>
         <span className="ec-phases">
           {synthReadout.phases.map((label, i) => (

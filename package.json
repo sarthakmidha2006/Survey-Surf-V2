@@ -1,8 +1,8 @@
 {
-  "name": "survey-surf",
+  "name": "sibero",
   "version": "0.1.0",
   "private": true,
-  "description": "Survey Surf — the perception company. Production marketing site + full-stack foundation.",
+  "description": "Sibero — the perception company. Production marketing site + full-stack foundation.",
   "engines": {
     "node": ">=20.9.0"
   },

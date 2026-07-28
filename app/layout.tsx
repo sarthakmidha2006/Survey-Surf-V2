@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "voice of customer",
     "positioning",
     "perception gap",
-    "Survey Surf",
+    "Sibero",
   ],
   alternates: { canonical: "/" },
   openGraph: {

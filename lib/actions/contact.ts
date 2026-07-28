@@ -48,7 +48,7 @@ export async function submitContact(input: ContactInput): Promise<ActionState> {
         email,
         company: company || null,
         competitor: competitor || null,
-        message,
+        message: message ?? "",
         source: headerList.get("referer"),
         userAgent: headerList.get("user-agent"),
       },

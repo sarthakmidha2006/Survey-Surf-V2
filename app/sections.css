@@ -1,5 +1,5 @@
 /* ============================================================
-   SURVEY SURF — SECTION LAYOUTS
+   SIBERO — SECTION LAYOUTS
    Section-scoped composition styles, ported from the canonical
    reference and fully tokenized. Imported by app/globals.css.
    Each block maps to a component in components/sections or
@@ -21,29 +21,31 @@
       backdrop-filter 0.4s ease,
       color 0.3s ease;
   }
-  /* Over the dark cover, the masthead reads as part of the wall, then
-     resolves to the ivory bar once the cover has scrolled away. Gated in JS
-     to pages that actually carry a dark hero, so nothing else changes. */
+  /* Over the dark cover the masthead is not a bar on the cover — it IS the
+     cover, continued to the top of the window. Same token, no rule, no shift in
+     tone: the eye must find no edge between the two. It resolves to the ivory
+     bar once the cover has scrolled away. Gated in JS to pages that actually
+     carry a dark hero, so nothing else changes. */
   .masthead--on-dark {
-    background: color-mix(in srgb, var(--ink) 82%, #000);
+    background: var(--cover-black);
     border-bottom-color: transparent;
     color: var(--paper);
     -webkit-backdrop-filter: blur(0px);
     backdrop-filter: blur(0px);
   }
-  /* Once the cover starts to move, the bar keeps its nearly-black field but
-     lets a hint of the hero bleed through behind a whisper of backdrop blur —
-     a frosted glass that reads as presence, never as heavy chrome. */
+  /* Once the cover moves under it, the field stays the identical near-black but
+     lets an eighth of what passes behind bleed through a whisper of blur — so
+     the cover's warm convergence glow travels through the bar rather than
+     stopping dead at its edge. Presence, never chrome. */
   .masthead--on-dark.masthead--scrolled {
-    background: color-mix(in srgb, #000 84%, transparent);
-    -webkit-backdrop-filter: blur(14px) saturate(1.05);
-    backdrop-filter: blur(14px) saturate(1.05);
+    background: color-mix(in srgb, var(--cover-black) 88%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.04);
+    backdrop-filter: blur(14px) saturate(1.04);
   }
-  .masthead--on-dark::after {
-    border-bottom-color: rgba(247, 244, 236, 0.12);
-  }
+  /* No hairline while the bar is the cover — a rule here is the seam. */
+  .masthead--on-dark::after,
   .masthead--on-dark.masthead--scrolled::after {
-    border-bottom-color: rgba(247, 244, 236, 0.18);
+    border-bottom-color: transparent;
   }
   .masthead--on-dark .wordmark {
     color: var(--paper);
@@ -59,32 +61,48 @@
     display: block;
     border-bottom: 1px solid var(--rule14);
   }
-  /* `.masthead .masthead-in` (not bare `.masthead-in`) so the vertical padding
+  /* THREE POSTS, NOT A ROW. A publication's masthead is symmetrical about its
+     own name: the wordmark on the left gutter, the contents dead-centre in the
+     bar, the one call on the right gutter. `space-between` centred the contents
+     between two unequal neighbours instead — off-axis by half the difference in
+     their widths. The outer columns are equal fractions, so the middle one is
+     centred on the *page*, whatever the two ends happen to measure.
+     `.masthead .masthead-in` (not bare `.masthead-in`) so the vertical padding
      out-ranks the shared `.wrap { padding: 0 var(--pad-x) }` gutter, which
      would otherwise zero it. Horizontal gutter is left to `.wrap` so the bar
      stays on the global content grid. */
   .masthead .masthead-in {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
-    padding-block: 16px 15px;
+    /* 13 + 42 (the call) + 13, plus the pair of hairlines = --masthead-h. The
+       bar is slimmer than it was and the type inside it larger: a masthead is
+       measured by the confidence of its name, not by the air around it. */
+    padding-block: 13px;
   }
+  /* The anchor. Large enough to be read as the publication's name from across
+     the room, tracked wide enough to be read as a masthead rather than a logo. */
   .wordmark {
     font-family: var(--app);
     font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.3em;
+    font-size: 17.5px;
+    letter-spacing: 0.34em;
     line-height: 1;
     text-decoration: none;
+    justify-self: start;
+    /* the tracking hangs one blank letter-space off the O — pull it back so the
+       name ends on the gutter optically, not mathematically */
+    margin-right: -0.34em;
   }
-  .wordmark .wm-dot {
-    color: var(--red);
-  }
+  /* Three destinations, set wide apart. The gap is the whole treatment: nothing
+     boxes them, nothing separates them, they simply stand far enough apart to
+     read as an index rather than a row of controls. */
   .masthead-links {
     display: flex;
-    gap: 36px;
+    justify-content: center;
     align-items: center;
+    gap: clamp(28px, 3.2vw, 52px);
   }
   .masthead-links a:not(.slip) {
     position: relative;
@@ -118,43 +136,60 @@
   .masthead-links a:not(.slip):hover::after {
     transform: scaleX(1);
   }
-  /* Masthead CTA — taller and calmer; keeps the established invert but now
-     lifts a touch with a soft glow. Scoped to the bar so the newsletter
-     slip (also `--small`) is untouched. */
+  /* THE ONE CALL, on the right gutter. The only outlined object in the bar, so
+     it needs no other distinction — the outline alone separates a thing you
+     press from three things you read. Wider in the box than the bar is tall,
+     which is what keeps a slimmer bar from making it look like a chip.
+     Scoped to the bar so the newsletter slip (also `--small`) is untouched.
+
+     It does not lift, glow or cast a shadow on hover. A masthead's call fills
+     with ivory and turns dark — the same invert the page uses everywhere else,
+     one ply slower so it reads as a surface changing rather than a state
+     toggling. Anything that hovers off the page is a product's button. */
   .masthead .slip {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 50px;
-    padding: 0 32px;
+    justify-self: end;
+    height: 42px;
+    padding: 0 clamp(28px, 2.6vw, 38px);
     font-size: 11px;
     letter-spacing: 0.2em;
     line-height: 1;
+    white-space: nowrap;
     transition:
-      background 0.24s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.24s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .masthead .slip:hover {
-    transform: translateY(-2px);
-  }
-  .masthead:not(.masthead--on-dark) .slip:hover {
-    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--ink) 40%, transparent);
-  }
-  .masthead--on-dark .slip:hover {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--paper) 30%, transparent),
-      0 10px 28px -10px rgba(0, 0, 0, 0.6);
+      background-color 0.3s var(--ease-settle),
+      color 0.3s var(--ease-settle),
+      border-color 0.3s var(--ease-settle);
   }
 
   /* ---------- SECTIONS / CHAPTERS ---------- */
   section {
-    scroll-margin-top: 92px;
+    /* A JUMP IS NOT A READ. The chapter break exists for a reader scrolling
+       into a chapter; a nav link or a seam's teaser has already done that work,
+       so an anchor landing scrolls through most of the break instead of parking
+       the reader in front of it, and the heading arrives just under the
+       masthead. Keyed to the break so the two can never drift. */
+    scroll-margin-top: calc(var(--masthead-h) - var(--chapter-gap) * 0.42);
   }
+  /* EVERY chapter opens on the same break and closes on nothing. All the air
+     between two chapters lives here, in the lead-in above the one you are
+     about to read — one number, one rhythm, no chapter needing to know what
+     precedes it. The only chapters that state their own figure are the two
+     that answer to the window (`--onescreen`) and the ones a seam already
+     bridges (`.seam + .chapter`). */
   .chapter {
-    padding-top: var(--section-gap);
+    padding-top: var(--chapter-gap);
+  }
+  /* A chapter that has to be readable in ONE SCREEN — headline, lede, exhibit
+     and finding all in view without scrolling. Every gap inside it is measured
+     in `vh` rather than in the page's fixed rhythm, so the whole spread
+     compresses on a short laptop and opens up on a tall display instead of
+     overflowing either. Nothing is scaled down to achieve it — only the air
+     between blocks moves. Its lead-in is the same break every other chapter
+     gets, capped by the window's height for the same reason. */
+  .chapter--onescreen {
+    padding-top: var(--chapter-gap-fit);
   }
   .opener h2,
   .opener .h2 {
@@ -165,6 +200,72 @@
     margin-bottom: 0;
   }
 
+  /* ---------- QUIET OPENER — the intermediate-section transition ----------
+     No folio, no chapter rule, no numbering. The kicker as a running caption
+     and a short hairline that trails off — a divider, not a border.
+     The extra whitespace above (`.chapter--flow`) does the separating work the
+     double rule used to, so the section flows on instead of restarting. */
+  .chapter--flow {
+    /* the break, plus one unit: with no folio and no rule overhead the type
+       starts higher in the box than a major chapter's does, and this is what
+       puts the two first marks on the same rhythm */
+    padding-top: calc(var(--chapter-gap) + var(--u) * 2);
+  }
+  .opener-index {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(14px, 1.6vw, 22px);
+    margin: 0 0 calc(var(--u) * 3.5);
+  }
+  /* the kicker rides inline as the caption; kill its stacked margin */
+  .opener-index .opener-kick {
+    margin-bottom: 0;
+  }
+  .opener-tick {
+    flex: 1 1 auto;
+    align-self: center;
+    height: 1px;
+    max-width: clamp(72px, 18vw, 240px);
+    background: var(--hair);
+  }
+
+  /* ---------- MOVEMENT — a soft-tinted run of intermediate sections ----------
+     A group of quiet sections shares one faint background wash so it reads as a
+     single movement, set gently apart from the white chapters around it. The
+     tint fades in through the whitespace at the top so the change is felt, never
+     drawn as an edge. */
+  .movement {
+    /* The movement OPENS the second half, directly under the flow band, so the
+       wash no longer has to fade IN: the tape's own copper-ruled edge is the
+       transition, and the tint starts full strength against it. Fading in over
+       96px only worked when there was a chapter break above to fade through —
+       under a compressed hand-off it washed out through the heading instead.
+       It still fades back OUT at the foot, or the dossier chapter below would
+       begin against a hard tint edge. */
+    padding-bottom: calc(var(--u) * 6);
+    background: linear-gradient(
+      to bottom,
+      var(--paper-soft) 0,
+      var(--paper-soft) calc(100% - 130px),
+      transparent 100%
+    );
+  }
+  /* THE TAPE IS THE DIVIDER. The CTA, the flow band and the second half are one
+     continuous hand-off, so the fold's first chapter drops the full chapter
+     break it would otherwise open with — the break's job (announcing a new
+     chapter) is already done by the band above it. Scoped to the fold's opening
+     chapter only: every chapter after it keeps the issue's normal rhythm. */
+  .dossier-fold > .movement:first-child > .chapter:first-child {
+    padding-top: calc(var(--u) * 4);
+  }
+  /* The movement's trailing room is part of the break BELOW it, not extra to
+     it: the wash has to fade out inside its own box, so the chapter after it
+     takes what the fade leaves. The two still sum to one chapter break — the
+     same split `.seam + .chapter` makes. */
+  .movement + .chapter {
+    padding-top: calc(var(--chapter-gap) - var(--u) * 6);
+  }
+
   /* ---------- CHAPTER SEAM — the bridge between chapters ----------
      The connective tissue read in the whitespace between two chapters, so the
      issue reads as one bound document rather than stacked pages. A centered
@@ -173,7 +274,13 @@
      into the next chapter on the right (louder — the eye is pulled downward
      into what follows). A whisper of shadow across the band reads as the fold
      of a page turn. The following chapter tightens its top rhythm so the seam
-     and the break beneath it read as one beat. */
+     and the break beneath it read as one beat.
+
+     THE SEAM IS SET INSIDE ONE CHAPTER BREAK, NOT BETWEEN TWO. It takes the
+     full break above it — the chapter just read has to be finished before the
+     marker appears — and then its own foot plus the following chapter's lead-in
+     close the break from the other side. Both sides land inside the 120–180px
+     window; neither is a gap the seam merely leans against. */
   .seam {
     /* the page-turn fold — a faint horizontal shadow, the binding of the issue */
     background: linear-gradient(
@@ -182,11 +289,13 @@
       var(--ink-a05) 50%,
       transparent
     );
-    padding: calc(var(--u) * 9) 0 calc(var(--u) * 4);
+    padding: var(--chapter-gap) 0 var(--chapter-gap-seam);
   }
   .seam + .chapter {
-    /* the seam already carries the break — don't double the gap beneath it */
-    padding-top: calc(var(--u) * 7);
+    /* the seam's foot (0.42) + this = one whole break. Split unevenly because
+       the marker leads the eye downward: the larger share of the air beneath it
+       belongs to the chapter it opens. */
+    padding-top: calc(var(--chapter-gap) * 0.58);
   }
 
   /* the centered issue marker, flanked by hairlines (the page-break rule) */
@@ -265,18 +374,6 @@
     padding-bottom: 3px;
     transition: background-size 0.4s ease;
   }
-  .seam-cue {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    transition: color 0.3s ease;
-  }
   .seam-arrow {
     color: var(--red);
     font-size: 13px;
@@ -287,20 +384,15 @@
   .seam-next:focus-visible .seam-teaser {
     background-size: 100% 1.5px;
   }
-  .seam-next:hover .seam-cue,
-  .seam-next:focus-visible .seam-cue {
-    color: var(--ink);
-  }
   .seam-next:hover .seam-arrow,
   .seam-next:focus-visible .seam-arrow {
     transform: translateY(3px);
   }
 
-  /* narrow — the bridge stacks; the teaser still leads downward into the next */
+  /* narrow — the bridge stacks; the teaser still leads downward into the next.
+     Nothing here touches the break: the phone step of the `--chapter-gap`
+     ladder already carries it, and a second figure would only drift from it. */
   @media (max-width: 680px) {
-    .seam {
-      padding-top: calc(var(--u) * 7);
-    }
     .seam-body {
       flex-direction: column;
       align-items: flex-start;
@@ -338,6 +430,58 @@
     .opener-split {
       grid-template-columns: 1fr;
       row-gap: calc(var(--u) * 5);
+    }
+  }
+
+  /* ---------- FEATURE OPENER — two masses, no leftover paper ----------
+     No folio, no chapter rule, no margin note. The problem this solves is a
+     two-word headline: at chapter scale it fills a third of its column and
+     leaves the rest as dead paper. So the column is cut back to roughly 30%
+     and the headline is set at COVER scale inside it — big enough to break
+     over two lines and hold the corner as a block of ink. The lede then takes
+     the remaining ~70% at full column width (no reading cap; the column IS the
+     measure). Two masses of comparable height, one spread, nothing left over. */
+  .opener--feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
+    column-gap: clamp(36px, 4vw, 68px);
+    align-items: start;
+  }
+  .opener--feature .h2 {
+    max-width: none;
+    margin-bottom: 0;
+    /* the vh term keeps the headline from eating the screen this chapter has
+       to fit inside; "clarity" still has to clear its own column, so the vw
+       term is the one that actually binds on a wide, short display */
+    font-size: clamp(55px, min(7.4vw, 11.7vh), 105px);
+    line-height: 0.95;
+    letter-spacing: -0.026em;
+  }
+  /* the lede runs the full width of its column — the point is that it reaches
+     the right edge of the grid, so no band of the spread is left unset */
+  .opener--feature .standfirst {
+    max-width: none;
+    font-size: clamp(19px, 1.72vw, 23px);
+    line-height: 1.56;
+  }
+  /* drop the lede so its first line sits on the headline's first baseline
+     rather than hanging above it */
+  .opener-feature-lede {
+    padding-top: clamp(6px, 1vw, 16px);
+  }
+  @media (max-width: 1000px) {
+    .opener--feature {
+      grid-template-columns: 1fr;
+      row-gap: calc(var(--u) * 4);
+    }
+    .opener--feature .h2 {
+      font-size: clamp(48px, 9.2vw, 84px);
+    }
+    .opener--feature .standfirst {
+      max-width: var(--measure);
+    }
+    .opener-feature-lede {
+      padding-top: 0;
     }
   }
 
@@ -451,7 +595,7 @@
   .hpl-photo img {
     object-fit: cover;
     object-position: 50% 30%;
-    filter: contrast(1.05) url(#ss-duotone);
+    filter: contrast(1.05) url(#sb-duotone);
   }
   /* A paper vignette that melts the remaining three edges into the page — the
      rectangle never announces itself. */
@@ -671,10 +815,106 @@
   /* ============================================================
      HERO · THE COVER — a full-bleed dark front page.
      The same inverted treatment the issue already uses for the
-     transcript spread and back cover, now on the cover. All colour,
+     turn and the back cover, now on the cover. All colour,
      type and rhythm are the existing tokens; the only new values are
      locally-scoped, colour-mixed paper shades for photographic realism.
      ============================================================ */
+  /* ============================================================
+     THE COVER LIFT — the one gesture in the issue.
+     Between the cover and Chapter 01, and nowhere else: the cover is lifted
+     off the report the way a hand lifts the cover of a file, and the first
+     page rises out from under it. Everything after it is an ordinary read.
+
+     THREE BEATS, over one window of scrolling:
+       1 · HELD      (`--cover-hold`)  the cover is pinned and nothing moves.
+                     The reader has scrolled; the file has not opened yet.
+       2 · LIFTED    (one `--cover-h`) the page rises from the foot of the
+                     window at scroll speed while the cover retreats upward at
+                     `--cover-throw` — under half that speed. Both layers are on
+                     screen together for the whole beat, which is the gesture:
+                     the cover is leaving, the page is arriving, and the reader
+                     can see one come out from under the other.
+       3 · READ      the cover un-pins, the page holds the top of the window,
+                     and from here the document is in ordinary flow forever.
+
+     HOW THE GEOMETRY GUARANTEES IT. The stage is two covers plus the held
+     moment tall, and the report is pulled back up by exactly one cover
+     (`.report`'s negative margin). Those two figures are what make beat 3 land
+     on the frame: the cover un-pins at the same scroll position the page's top
+     edge reaches the bar, so there is no moment where the page is at the top
+     and the cover is still pinned behind it, and none where the cover has left
+     before the page arrived. Both are `calc()` off `--cover-h` — never
+     hand-tuned, and never measured in JavaScript.
+
+     WHAT THE SCRIPT DOES, AND WHAT IT DOESN'T. Beats 1 and 3 are pure CSS
+     (sticky + the two lengths above). The only thing the script contributes is
+     `--cover-lift`, the 0→1 progress of beat 2, which drives ONE transform on
+     ONE element. So with no JavaScript the sequence still reads correctly —
+     the page rises out from under a pinned cover — it simply does not lift.
+     Nothing fades, nothing scales, nothing is measured per frame.
+
+     DESKTOP AND MOTION ONLY. A pinned window is the wrong instrument on a
+     phone, where the viewport itself resizes as the toolbar collapses and would
+     drag the whole geometry with it mid-gesture; and a reader who has asked for
+     less motion should not be handed the one place the page moves under them.
+     Both conditions are stated here AND in the component, from the same query,
+     so the stage is never pinned by a stylesheet the script isn't watching.
+     ============================================================ */
+  .cover-lift {
+    position: relative;
+  }
+  /* The report rides OVER the cover — it comes out from underneath it, so it has
+     to paint above it. One wrapper for the whole document after the cover, so
+     every chapter inherits the same stacking; scoping this to the first chapter
+     alone would leave the seam below it painting under the pinned cover.
+
+     IT CARRIES ITS OWN PAPER. Every other surface on the site can let the body's
+     ivory show through, but this one is a sheet passing in front of a black
+     field: transparent, its type would read straight through the cover instead of
+     arriving on a page. */
+  .report {
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+  }
+
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .cover-lift {
+      /* the cover, the held moment, and the window the page rises through */
+      height: calc(var(--cover-h) * 2 + var(--cover-hold));
+    }
+    .cover-lift-sheet {
+      position: sticky;
+      top: var(--masthead-h);
+      height: var(--cover-h);
+      z-index: 0;
+      /* The lift. `--cover-lift` is the progress of beat 2 (0 → 1) and this is
+         the only thing it drives: one composited transform, no layout, no
+         repaint of the live figure inside. */
+      transform: translate3d(
+        0,
+        calc(var(--cover-lift, 0) * var(--cover-throw) * -1),
+        0
+      );
+    }
+    .report {
+      /* pulled back up under the cover by exactly one cover: this is what puts
+         the page's top edge at the foot of the window at rest, so it has one
+         window to rise through and lands at the bar as the cover un-pins */
+      margin-top: calc(var(--cover-h) * -1);
+    }
+    /* THE LIFT IS CHAPTER 01'S ENTRANCE. Its opener would otherwise play its own
+       — a 34px settle and an ink-in — while the page is already rising, which
+       reads as washed-out type arriving twice instead of a page being uncovered.
+       So the first chapter comes up already printed, and every chapter after it
+       keeps the ordinary entrance. Scoped to the chapter the cover is lifted
+       off, and only while there is a lift to do the work. */
+    .cover-lift + .report > :first-child .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* ============================================================
      THE COVER — a black field. Warm-ivory type on the left; on the right,
      FIG. A · the conversation stream. No room, no desk, no lamps: one calm
@@ -700,15 +940,20 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: calc(100svh - 49px);
-    /* near-black, faintly warm; one soft glow sits behind the convergence */
+    /* The window under the bar, exactly: the cover owns the whole first screen
+       and shows nothing of the report beneath it. The figure is a token because
+       the cover lift's entire geometry is measured off the same one. */
+    min-height: var(--cover-h);
+    /* near-black, faintly warm; one soft glow sits behind the convergence. The
+       flat field is `--cover-black` because the masthead is printed on the same
+       token — the bar and the cover are one surface, not two that match. */
     background:
       radial-gradient(
         58% 68% at 82% 50%,
         rgba(122, 72, 46, 0.1),
         transparent 62%
       ),
-      #060504;
+      var(--cover-black);
     color: var(--paper);
     padding-top: calc(var(--u) * 6);
     padding-bottom: calc(var(--u) * 6);
@@ -719,16 +964,23 @@
     position: relative;
     z-index: 3;
     display: grid;
-    /* the editorial split — 42% lede / 58% stream */
-    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    /* the editorial split — 40% lede / 60% exhibit. The report is the object the
+       page delivers, and it, the output beam and the chip field all have to fit
+       side by side, so the exhibit takes the larger share. The headline is sized
+       off its own column (see .htl-claim), so it simply follows. */
+    grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
     gap: clamp(24px, 2.6vw, 56px);
     align-items: center;
     width: 100%;
   }
 
   /* ---- Left · the lede ---- */
+  /* A containment context, so the headline can be sized off the measured column
+     instead of the viewport — the only way the long claim clause is guaranteed
+     to hold one line at every desktop width (see .htl-claim below). */
   .hero-lede {
     max-width: 36rem;
+    container-type: inline-size;
   }
   .hero-eyebrow {
     font-family: var(--app);
@@ -742,31 +994,66 @@
   /* Scoped under .hero-lede so the size wins over the base `.h1` rule, which
      is authored later in the components layer and would otherwise override an
      unscoped `.hero-title` at equal specificity (same cascade quirk the CTA
-     hit). Sized so each explicit clause holds one line — four, like the ref. */
+     hit). Three clauses, three lines — the stacked fallback below 980px lets
+     them run together and wrap, which is correct on a narrow column. */
   .hero-lede .hero-title {
     color: var(--paper);
-    font-size: clamp(31px, 3.25vw, 48px);
-    line-height: 1.08;
+    font-size: clamp(31px, 3.25vw, 44px);
+    /* the first two lines sit a shade tighter than the reference — the block
+       reads as one thought rather than three stacked ones */
+    line-height: 1.045;
     letter-spacing: -0.015em;
     max-width: 100%;
     margin-bottom: calc(var(--u) * 4);
     text-wrap: initial;
   }
-  /* Reference line breaks are explicit — each clause holds its own line. */
+  /* Line breaks are explicit — each clause holds its own line. */
   .hero-title .htl {
     display: block;
     white-space: nowrap;
   }
+  /* The signature line breathes again — the tightening applies only between the
+     first two clauses, where the thought is continuous. */
   .hero-title .pen-underline {
     display: inline-block;
     white-space: nowrap;
+    margin-top: 0.1em;
   }
+
+  /* ---- the emphasis. One notch of each; nothing that reads as decoration. ---- */
+  /* "Beyond the Noise." — the ivory, warmed a few percent toward the copper. */
+  .hero-title .htl-warm {
+    color: color-mix(in srgb, var(--paper) 89%, var(--copper-l));
+  }
+  /* one word carries the weight; the rest of the line stays regular */
+  .hero-title .htl-strong {
+    font-weight: 560;
+  }
+  /* "Sibero." — a hair larger, in the copper the verdict is set in, pulled back
+     toward the ivory so at headline size it reads as warmth, not as colour */
+  .hero-title .htl-brand {
+    font-size: 1.05em;
+    color: color-mix(in srgb, var(--copper-l) 72%, var(--paper));
+  }
+
+  /* Desktop: size the headline off the lede column, not the viewport. The claim
+     clause is the longest line in the block, so the coefficient is set from its
+     measured width in Newsreader (~11.8× the font size) with a margin to spare —
+     it cannot wrap, and it cannot overflow the column either. */
+  @media (min-width: 980px) {
+    .hero-lede .hero-title {
+      font-size: min(44px, 8.1cqi);
+    }
+  }
+
   .hero-standfirst {
     font-family: var(--text);
-    font-size: clamp(17px, 1.35vw, 20px);
-    line-height: 1.6;
+    /* a notch larger, with a little more air between the lines, so the paragraph
+       holds its side of the spread against the exhibit */
+    font-size: clamp(18.5px, 1.48vw, 22px);
+    line-height: 1.66;
     color: var(--paper-a88);
-    max-width: 42ch;
+    max-width: min(520px, 100%);
     margin-bottom: calc(var(--u) * 5.5);
   }
   .hero-actions {
@@ -805,7 +1092,9 @@
     max-width: 100%;
   }
   .hero-metric {
-    padding: 0 clamp(10px, 1.4vw, 22px);
+    /* tighter gutters than before: four figures share a narrower lede now, and
+       the longest of them is a word, not a number */
+    padding: 0 clamp(6px, 1vw, 14px);
     border-left: 1px solid var(--hair-l-soft);
   }
   .hero-metric:first-child {
@@ -816,7 +1105,9 @@
     display: block;
     font-family: var(--display);
     font-weight: 450;
-    font-size: clamp(19px, 1.9vw, 27px);
+    /* sized off the lede column, not the viewport — four figures share this row,
+       and the longest ("Enterprise") has to hold its own quarter of it */
+    font-size: clamp(16px, 4.1cqi, 22px);
     line-height: 1.05;
     color: var(--paper);
     margin-bottom: 7px;
@@ -831,7 +1122,6 @@
     line-height: 1.35;
     color: var(--paper-a62);
   }
-
 
   /* ============================================================
      FIG. A · THE CONVERSATION STREAM
@@ -861,14 +1151,30 @@
   .cs-stage {
     position: relative;
     width: 100%;
-    height: clamp(500px, 74vh, 780px);
+    /* tall enough that the report — which now carries a masthead, a summary, a
+       ledger, two findings and a verdict — always has air around it */
+    height: clamp(764px, 82vh, 940px);
   }
 
-  /* ---- layer 1 · the streams of light ---- */
+  /* ---- layer 1 · the intake: tributaries + their particle field ----
+     Behind the chips, so the pills occlude it and the field reads as depth. */
   .cs-canvas {
     position: absolute;
     inset: 0;
     z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* ---- layer 3 · the output beam ----
+     ABOVE the chips. The beam is the brightest thing in the composition and the
+     one the whole story turns on; no drifting pill may ever take a dark bite out
+     of it, and the murmur is free to drift right up to the report's edge. */
+  .cs-beam {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -881,12 +1187,39 @@
     z-index: 2;
     pointer-events: none;
   }
-  /* the positioned anchor — Framer Motion drives its transform (drift);
-     the CSS `translate` centres it on (fx, fy) and composes independently */
+  /* the positioned anchor — Framer Motion (foreground) or a CSS keyframe (the
+     murmur) drives its transform; the CSS `translate` centres it on (fx, fy) and
+     composes independently, so the two never fight each other */
   .cs-chip {
     position: absolute;
     translate: -50% -50%;
     will-change: transform;
+  }
+  /* The murmur is fifty-odd elements. It gets no Framer Motion node and no
+     compositor hint — one shared keyframe, phase-shifted per chip by a negative
+     delay, so the whole far field costs the main thread nothing. */
+  .cs-chip--murmur {
+    will-change: auto;
+  }
+  .cs-chip--murmur .cs-chip-in {
+    transform: scale(var(--sc, 0.75)) rotate(var(--rot, 0deg));
+  }
+  .js .cs-chip--murmur {
+    animation: cs-murmur var(--dur, 56s) ease-in-out var(--delay, 0s) infinite;
+  }
+  @keyframes cs-murmur {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .cs-chip--murmur {
+      animation: none;
+    }
   }
   /* the pill itself — charcoal, thin border, small type; depth via opacity,
      blur and scale so the field reads like dust suspended in light */
@@ -910,185 +1243,431 @@
     transform-origin: center;
     backface-visibility: hidden;
   }
-  /* near chips sit a touch brighter and more solid; far chips flatten out */
-  .cs-chip[data-depth="2"] .cs-chip-in {
+  /* depth stack: the two murmur planes sit behind the two readable foreground
+     planes, so the eye never has to fight them for the near chips */
+  .cs-chip[data-depth="0"] {
+    z-index: 0;
+  }
+  .cs-chip[data-depth="1"] {
+    z-index: 1;
+  }
+  .cs-chip[data-depth="2"] {
+    z-index: 2;
+  }
+  .cs-chip[data-depth="3"] {
+    z-index: 3;
+  }
+  /* near chips sit a touch brighter and more solid */
+  .cs-chip[data-depth="3"] .cs-chip-in {
     background: var(--cs-chip-near);
     border-color: var(--cs-chip-edge-near);
     color: rgba(247, 244, 236, 0.96);
   }
-  .cs-chip[data-depth="0"] .cs-chip-in {
+  /* the murmur — faded, softly blurred, low-contrast and set a size down, so it
+     reads as far-off conversation rather than as an active UI element */
+  .cs-chip--murmur .cs-chip-in {
     box-shadow: none;
+    background: rgba(15, 13, 11, 0.5);
+    border-color: rgba(247, 244, 236, 0.07);
+    filter: blur(var(--blur, 0px)) contrast(0.72) saturate(0.82);
+  }
+  /* the farthest plane recedes one step further still */
+  .cs-chip[data-depth="0"] .cs-chip-in {
+    border-color: rgba(247, 244, 236, 0.05);
   }
 
-  /* ---- layer 3 · the one perception. Fixed. Never moves. ---- */
+  /* ============================================================
+     layer 4 · THE REPORT — the first page of a confidential intelligence
+     document, and the object the whole hero exists to deliver.
+
+     It is deliberately NOT a UI component. There is no tiling, no grid, no
+     panel inside the panel and no chrome of any kind. What sets it is what sets
+     a printed report: a stacked uppercase masthead, one standfirst sentence,
+     readings as a small label over a large figure, titled sections, horizontal
+     rules, and a great deal of air.
+
+     THE TYPE SCALE IS CONTAINER-DRIVEN. `container-type: inline-size` means every
+     size below is a fraction of the report's own measured width, so the
+     masthead / figure / body / label ratios are identical whether the report
+     renders at 420px on a wide desktop or 212px on a phone. Nothing here is tuned
+     against a viewport.
+
+     Note the size ceiling: a 48px masthead with 30px figures and 20px body — the
+     brief's absolute scale — measures out at ~1150px tall in a panel this wide,
+     which no stage in a split hero can hold. The ratios below are that hierarchy
+     taken to the largest scale the panel actually affords.
+     ============================================================ */
   .cs-card {
     position: absolute;
     right: 1.5%;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 3;
-    width: clamp(244px, 30%, 344px);
-    padding: 26px 26px 22px;
-    /* dark, solid — deliberately no glassmorphism */
-    background: #0c0a08;
+    z-index: 4;
+    container-type: inline-size;
+
+    /* the whole scale, as fractions of the report's own width */
+    --cs-title: clamp(19px, 9.2cqi, 37px); /* the masthead */
+    --cs-val: clamp(15px, 6.5cqi, 26px); /* the figures */
+    --cs-body: clamp(11px, 4.15cqi, 16px); /* standfirst + section prose */
+    --cs-cap: clamp(8px, 2.55cqi, 10.5px); /* every label, and nothing else */
+    /* the vertical rhythm — one unit, used everywhere, generous by intent */
+    --cs-air: clamp(12px, 4.9cqi, 19px);
+    --cs-pad: clamp(15px, 7.2cqi, 28px);
+
+    width: clamp(340px, 50%, 424px);
+    padding: var(--cs-pad);
+    /* a sheet, not a surface: flat, dark, no gloss and no glass */
+    background: #0a0908;
     border: 1px solid rgba(247, 244, 236, 0.14);
-    border-radius: 8px;
-    /* a deep lift plus a subtle warm cast — the stream's light on the card */
+    border-radius: 3px;
+    /* it sits above the field, and the beam's light falls on it */
     box-shadow:
-      0 40px 80px -30px rgba(0, 0, 0, 0.9),
-      0 0 64px -22px rgba(192, 86, 58, 0.38);
+      0 48px 96px -32px rgba(0, 0, 0, 0.94),
+      0 0 76px -24px rgba(192, 86, 58, 0.36);
     overflow: hidden;
   }
-  /* the warm glow where the stream is received at the card's left edge */
-  .cs-card-glow {
+
+  /* Where the beam terminates. A bloom on the entry line so the fibre visibly
+     continues into the sheet instead of stopping dead at its edge. */
+  .cs-card-intake {
     position: absolute;
     left: 0;
     top: 50%;
-    width: 62%;
-    height: 74%;
-    transform: translateY(-50%);
+    translate: 0 -50%;
+    width: 76%;
+    height: 62%;
     background: radial-gradient(
-      58% 50% at 0% 50%,
-      rgba(255, 226, 196, 0.1),
-      rgba(192, 86, 58, 0.05) 42%,
-      transparent 72%
+      42% 46% at 0% 50%,
+      rgba(255, 238, 212, 0.15),
+      rgba(255, 168, 112, 0.06) 40%,
+      transparent 74%
     );
+    opacity: 0.7;
     pointer-events: none;
   }
-  .cs-card-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin: 0 0 18px;
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--paper-a62);
+  /* The fibre's terminus, exactly on the beam's centre line — a bright core that
+     dies away into the sheet, carrying its own bloom so the light does not simply
+     stop dead at the border. */
+  .cs-card-intake::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 56px;
+    height: 3px;
+    translate: 0 -50%;
+    border-radius: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 253, 248, 0.95),
+      rgba(255, 224, 184, 0.34) 44%,
+      rgba(255, 214, 168, 0)
+    );
+    box-shadow: 0 0 16px 3px rgba(255, 188, 128, 0.26);
   }
+
+  /* ---- the masthead ---- */
+  .cs-head {
+    margin: 0 0 calc(var(--cs-air) * 0.95);
+  }
+  /* the live marker sits above the title as a mark, not as a bullet in a row */
+  .cs-mark,
   .cs-card-dot {
-    flex: none;
+    display: block;
     width: 6px;
     height: 6px;
+    margin-bottom: calc(var(--cs-air) * 0.8);
     border-radius: 50%;
     background: var(--cs-red);
-    box-shadow: 0 0 8px rgba(192, 86, 58, 0.85);
+    box-shadow: 0 0 9px rgba(192, 86, 58, 0.9);
   }
-  .cs-card-quote {
+  .cs-masthead {
     margin: 0;
-    font-family: var(--display);
-    font-weight: 400;
-    font-size: clamp(21px, 1.9vw, 27px);
-    line-height: 1.28;
-    letter-spacing: -0.01em;
+    font-family: var(--app);
+    font-weight: 600;
+    font-size: var(--cs-title);
+    letter-spacing: 0.045em;
+    line-height: 0.98;
+    text-transform: uppercase;
     color: var(--cs-ivory);
   }
-  .cs-card-rule {
-    height: 1px;
-    margin: 22px 0 18px;
-    background: rgba(247, 244, 236, 0.12);
+  /* one word to a line — a document title, never a row of interface text */
+  .cs-masthead-line {
+    display: block;
   }
-  .cs-card-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+
+  /* ---- the standfirst: one sentence, the largest prose in the report ---- */
+  .cs-standfirst {
+    margin: 0;
+    font-family: var(--text);
+    font-size: calc(var(--cs-body) * 1.02);
+    line-height: 1.48;
+    color: rgba(247, 244, 236, 0.8);
+    text-wrap: pretty;
+  }
+
+  /* ---- the rules: the report's only structure ---- */
+  .cs-rule {
+    height: 1px;
+    margin: var(--cs-air) 0;
+    background: rgba(247, 244, 236, 0.14);
+    transform-origin: left center;
+  }
+  .cs-rule:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- every label in the report, and nothing else ---- */
+  .cs-metric-cap,
+  .cs-sec-cap,
+  .cs-verdict-cap {
+    margin: 0;
+    font-family: var(--app);
+    font-weight: 600;
+    font-size: var(--cs-cap);
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    /* labels never compete with values: they are half the brightness and a
+       quarter of the size, and they never change */
+    color: rgba(247, 244, 236, 0.42);
+  }
+
+  /* ---- the readings: label over figure, separated by rules and air ---- */
+  .cs-metrics {
     margin: 0;
   }
-  .cs-card-stat {
-    padding-left: 16px;
-    border-left: 1px solid rgba(247, 244, 236, 0.1);
+  .cs-metric {
+    padding: calc(var(--cs-air) * 0.62) 0;
   }
-  .cs-card-stat:first-child {
-    padding-left: 0;
-    border-left: none;
+  .cs-metric + .cs-metric {
+    border-top: 1px solid rgba(247, 244, 236, 0.07);
   }
-  .cs-card-stat-val {
+  .cs-metric-val {
+    display: block;
+    margin: calc(var(--cs-air) * 0.2) 0 0;
     font-family: var(--display);
     font-weight: 450;
-    font-size: clamp(22px, 2vw, 30px);
+    font-size: var(--cs-val);
     line-height: 1;
+    letter-spacing: -0.012em;
     color: var(--cs-ivory);
     font-feature-settings:
       "onum" 1,
       "pnum" 1;
   }
-  .cs-card-stat-cap {
-    margin: 6px 0 0;
+  /* the unit trails the figure, quieter and smaller — "2.3M signals" */
+  .cs-metric-unit {
+    margin-left: 0.42em;
+    font-family: var(--text);
+    font-size: 0.48em;
+    letter-spacing: 0.01em;
+    color: rgba(247, 244, 236, 0.46);
+  }
+  /* "Very High" is a reading, not a figure — it belongs in the apparatus face */
+  .cs-metric[data-qual] .cs-metric-val {
     font-family: var(--app);
-    font-weight: 500;
-    font-size: 9.5px;
-    letter-spacing: 0.13em;
+    font-weight: 600;
+    font-size: calc(var(--cs-val) * 0.62);
+    letter-spacing: 0.1em;
+    line-height: 1.2;
     text-transform: uppercase;
-    color: var(--paper-a62);
   }
 
-  /* the perception dot breathes slowly — a single, quiet sign of life */
-  .js .cs-card-dot {
+  /* ---- the titled sections ---- */
+  .cs-sec {
+    margin: 0;
+  }
+  .cs-sec + .cs-sec {
+    margin-top: calc(var(--cs-air) * 1.05);
+  }
+  .cs-sec-body {
+    margin: calc(var(--cs-air) * 0.4) 0 0;
+    font-family: var(--text);
+    font-size: var(--cs-body);
+    line-height: 1.5;
+    color: rgba(247, 244, 236, 0.7);
+    text-wrap: pretty;
+  }
+  /* the primary insight is the sentence the analysis exists to say: the display
+     face, full ivory, and a size up on everything else */
+  .cs-sec--insight .cs-sec-body {
+    font-family: var(--display);
+    font-size: calc(var(--cs-body) * 1.16);
+    line-height: 1.4;
+    letter-spacing: -0.008em;
+    color: var(--cs-ivory);
+  }
+
+  /* ---- the call ---- */
+  .cs-verdict {
+    padding: calc(var(--cs-air) * 0.15) 0;
+  }
+  .cs-verdict-cap {
+    letter-spacing: 0.22em;
+    color: color-mix(in srgb, var(--copper-l) 56%, var(--paper));
+  }
+  .cs-verdict-val {
+    margin: calc(var(--cs-air) * 0.42) 0 0;
+    font-family: var(--app);
+    font-weight: 600;
+    font-size: calc(var(--cs-val) * 0.74);
+    letter-spacing: 0.13em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: var(--copper-l);
+  }
+
+  /* the live marker breathes slowly — a single, quiet sign of life */
+  .js .cs-mark {
     animation: cs-dot-pulse 3.4s ease-in-out infinite;
   }
   @keyframes cs-dot-pulse {
     0%,
     100% {
-      opacity: 0.65;
+      opacity: 0.62;
     }
     50% {
       opacity: 1;
     }
   }
+  /* `.js .cs-mark` is two classes, so this override has to be too — at plain
+     `.cs-mark` specificity it loses the cascade and the marker keeps pulsing for
+     someone who has explicitly asked for less movement. */
   @media (prefers-reduced-motion: reduce) {
-    .cs-card-dot {
+    .js .cs-mark {
       animation: none;
     }
   }
 
-  /* ---- the stream, stacked below the lede on tablet / mobile ---- */
+  /* ============================================================
+     THE GENERATION — the report is produced, not displayed.
+     The beam establishes on canvas over ~0.7s; on contact the border strikes, a
+     bloom spreads from the entry point, the masthead lights, the standfirst
+     follows, the readings populate one at a time and the verdict lands last.
+     Every stage is a transition with its own `--gd` delay set in the component,
+     so the sequence costs no JavaScript once it starts.
+
+     The hidden state is gated behind BOTH `.js` and a motion preference, so the
+     report is fully readable without JavaScript and instantly complete for anyone
+     who has asked for less movement.
+     ============================================================ */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .cs-card .cs-g {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .js .cs-card .cs-gr {
+      transform: scaleX(0);
+    }
+    .js .cs-card.is-gen .cs-g,
+    .js .cs-card.is-gen .cs-gr {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.66s var(--ease-settle) var(--gd, 0s),
+        transform 0.82s var(--ease-settle) var(--gd, 0s);
+    }
+    /* the sheet illuminates the instant the beam makes contact, then settles */
+    .js .cs-card.is-gen {
+      animation: cs-strike 2s var(--ease-settle) 0.44s both;
+    }
+    .js .cs-card.is-gen .cs-card-intake {
+      animation:
+        cs-intake 2.4s var(--ease-settle) 0.42s both,
+        cs-intake-breathe 7s ease-in-out 2.9s infinite;
+    }
+  }
+  @keyframes cs-strike {
+    0% {
+      border-color: rgba(247, 244, 236, 0.08);
+      box-shadow:
+        0 48px 96px -32px rgba(0, 0, 0, 0.94),
+        0 0 40px -30px rgba(192, 86, 58, 0);
+    }
+    15% {
+      border-color: rgba(255, 227, 190, 0.7);
+      box-shadow:
+        0 48px 96px -32px rgba(0, 0, 0, 0.94),
+        0 0 116px -10px rgba(255, 178, 116, 0.54);
+    }
+    100% {
+      border-color: rgba(247, 244, 236, 0.14);
+      box-shadow:
+        0 48px 96px -32px rgba(0, 0, 0, 0.94),
+        0 0 76px -24px rgba(192, 86, 58, 0.36);
+    }
+  }
+  @keyframes cs-intake {
+    0% {
+      opacity: 0.1;
+    }
+    13% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+  @keyframes cs-intake-breathe {
+    0%,
+    100% {
+      opacity: 0.62;
+    }
+    50% {
+      opacity: 0.88;
+    }
+  }
+
+  /* ---- the stream, stacked below the lede on tablet / mobile ----
+     The stage grows with the report; the report never crops against it. Because
+     the type scale is container-driven, the only thing these stops change is how
+     much room the sheet gets — the hierarchy inside it looks after itself. */
   @media (max-width: 979px) {
     .cs-stage {
-      height: clamp(380px, 52vw, 460px);
+      height: clamp(700px, 86vw, 840px);
       max-width: 680px;
       margin-inline: auto;
     }
     .cs-card {
       right: 2%;
-      width: clamp(206px, 40%, 268px);
-      padding: 18px 18px 16px;
-    }
-    .cs-card-eyebrow {
-      margin-bottom: 14px;
-    }
-    .cs-card-quote {
-      font-size: clamp(17px, 3vw, 21px);
+      width: clamp(320px, 52%, 400px);
     }
   }
   @media (max-width: 560px) {
+    /* The narrowest arrangement: the report becomes a tall sheet on the right and
+       a single column of opinions runs down beside it. There is no room here for
+       an output beam, so the tributaries land directly on the sheet's edge — the
+       same story, told in the space available. */
     .cs-stage {
-      height: 340px;
+      height: 636px;
     }
     .cs-card {
-      width: 188px;
-      padding: 14px 14px 12px;
+      width: 218px;
     }
-    .cs-card-eyebrow {
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      margin-bottom: 12px;
+    .cs-card-intake::after {
+      width: 24px;
     }
-    .cs-card-quote {
-      font-size: 16px;
-      line-height: 1.24;
+    /* the standfirst is the one sentence a sheet this narrow can afford to lose:
+       the masthead, the readings, the insight and the call all survive */
+    .cs-standfirst {
+      display: none;
     }
-    .cs-card-rule {
-      margin: 14px 0 12px;
-    }
-    .cs-card-stat {
-      padding-left: 12px;
-    }
-    .cs-card-stat-val {
-      font-size: 18px;
-    }
+    /* a size down again: the readable field on a phone is only ~90px wide, and
+       CHIP_PX in the figure is kept in step with this so nothing is ever clipped */
+    /* a size down again: the readable field on a phone is only ~90px wide, and
+       CHIP_PX in the figure is kept in step with this so nothing is ever clipped */
     .cs-chip-in {
-      padding: 5px 10px;
-      font-size: 10.5px;
+      padding: 4px 9px;
+      font-size: 9.5px;
+    }
+  }
+  /* On the narrowest phones the report alone would take almost the whole stage,
+     leaving no field wide enough for a single readable phrase — so the sheet gives
+     some width back. Below this the figure legitimately shows no readable pills
+     (see the fit filter in buildChips) and the murmur carries the convergence. */
+  @media (max-width: 400px) {
+    .cs-card {
+      width: 190px;
     }
   }
 
@@ -1740,7 +2319,8 @@
       width: 25%;
     }
     .js .eb-stage:not(.is-ready) .eb-card {
-      transform: translateY(20px) rotate(calc(var(--r, 0deg) * 1.5)) scale(0.965);
+      transform: translateY(20px) rotate(calc(var(--r, 0deg) * 1.5))
+        scale(0.965);
     }
     .js .eb-stage:not(.is-ready) .eb-finding {
       transform: translateY(22px) scale(0.97);
@@ -1787,72 +2367,89 @@
     }
   }
 
-  /* ---------- §2 THE GAP — FIG. 01 · PERCEPTION DEVIATION ----------
-     A levelling run, not a chart. Belief (ink, roman) on the left; market
-     reality (ink, italic) on the right; a hairline runs in from each side but
-     stops short — the empty span between them, ruled in the editor's red, IS
-     the gap. A faint calibration axis drops through the centre of every gap;
-     one red verdict reads the mean deviation. Red is spent only on the
-     measured distance and the finding — nowhere else. */
+  /* ---------- §2 THE GAP — THE PERCEPTION EXHIBIT ----------
+     ONE composition on ONE three-column grid (word · track · word): the column
+     headings, the five attributes, and the finding are all bands of the same
+     figure, so the conclusion is the last line of the graphic rather than a
+     summary filed under it.
+
+     There is not a single horizontal rule in the whole exhibit. Rules are what
+     made it read as a table, and the five guides that run in from the words are
+     held at a whisper for the same reason — they are there to carry the eye
+     across the word gap, nothing more. The red is the only line language with
+     any weight: five struck measurements, and a stem that walks the calibration
+     axis down into the finding. Belief and reality are set in ink at display
+     scale; red is spent on the measured distance and on the number it adds
+     up to, nowhere else. */
   .gi {
-    margin: calc(var(--u) * 6) 0 0;
-    --gi-wordcol: clamp(104px, 15vw, 176px);
-    --gi-rowh: clamp(54px, 6.2vw, 70px);
+    /* every vertical measure here is on a viewport-height budget, because the
+       chapter has to close inside one screen. Row PITCH is the only thing that
+       gives when the screen is short — the type keeps its own scale. */
+    margin: clamp(20px, 3vh, 44px) 0 0;
+    --gi-wordcol: clamp(168px, 23vw, 310px);
+    --gi-rowh: clamp(52px, 7.6vh, 100px);
+    --gi-wordpad: clamp(20px, 2.2vw, 34px);
   }
 
-  /* the fig header strip */
-  .gi-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--hair);
-  }
-  .gi .gi-head-l {
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    color: var(--ink);
-  }
-  .gi .gi-head-r {
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    color: var(--ink-soft);
-  }
-
-  /* the two column captions + centre instrument label */
+  /* band 1 — the column headings, each set over the column it names. No rule
+     under them: the first row's own half-height is the separation. */
   .gi-labels {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: var(--gi-wordcol) minmax(0, 1fr) var(--gi-wordcol);
     align-items: baseline;
-    gap: 20px;
-    margin-top: calc(var(--u) * 3);
-    margin-bottom: calc(var(--u) * 2);
+    margin-bottom: clamp(7px, 1.2vh, 18px);
   }
   .gi .gi-label {
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    color: var(--ink);
+    font-size: clamp(11.5px, 1.02vw, 14px);
+    letter-spacing: 0.24em;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--ink-soft);
   }
   .gi .gi-label--l {
-    justify-self: start;
-    text-align: left;
-  }
-  .gi .gi-label--r {
     justify-self: end;
     text-align: right;
+    padding-right: var(--gi-wordpad);
+  }
+  .gi .gi-label--r {
+    justify-self: start;
+    text-align: left;
+    padding-left: var(--gi-wordpad);
   }
   .gi .gi-label--axis {
     justify-self: center;
-    color: var(--ink-soft);
-    font-size: 9px;
-    letter-spacing: 0.24em;
+    text-align: center;
+    color: var(--ink);
+  }
+  /* below this the word columns are narrower than their own headings, so the
+     side headings step back out to the exhibit's outer edges. */
+  @media (max-width: 1000px) {
+    .gi-labels {
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+    }
+    .gi .gi-label--l {
+      justify-self: start;
+      text-align: left;
+      padding-right: 0;
+    }
+    .gi .gi-label--r {
+      justify-self: end;
+      text-align: right;
+      padding-left: 0;
+    }
   }
 
-  /* the levelling run */
-  .gi-rows {
+  /* bands 2–6 — the levelling run */
+  .gi-run {
     position: relative;
   }
+  /* The calibration axis, in two exact pieces. The run's piece spans the five
+     data rows; the finding's tail picks it up at the top of its own row and
+     stops ON its bar. Two pieces rather than one because the axis must END at
+     the conclusion — an axis running past it into blank paper is the single
+     thing that makes the whole figure look unfinished — and only the tail can
+     know where that bar is at every width. They abut, so it reads as one line. */
   .gi-axis {
     position: absolute;
     left: 50%;
@@ -1863,6 +2460,9 @@
     background: var(--ink-a12);
     z-index: 0;
   }
+  .gi-axis--tail {
+    bottom: 50%;
+  }
   .gi-row {
     position: relative;
     z-index: 1;
@@ -1872,25 +2472,24 @@
     height: var(--gi-rowh);
     transition: background-color 0.3s ease;
   }
-  .gi-row + .gi-row {
-    border-top: 1px solid var(--rule14);
-  }
   .gi-belief,
   .gi-reality {
     font-family: var(--display);
     font-weight: 450;
-    font-size: clamp(17px, 1.7vw, 23px);
-    line-height: 1.08;
+    /* the vh term is a floor-guard, not the point: on a short screen the row
+       pitch closes up around the words, so they must not also grow into it */
+    font-size: clamp(26px, min(3.3vw, 5vh), 46px);
+    line-height: 1.02;
     color: var(--ink);
     transition: color 0.3s ease;
   }
   .gi-belief {
     text-align: right;
-    padding-right: clamp(12px, 1.4vw, 22px);
+    padding-right: var(--gi-wordpad);
   }
   .gi-reality {
     text-align: left;
-    padding-left: clamp(12px, 1.4vw, 22px);
+    padding-left: var(--gi-wordpad);
     font-style: italic;
   }
 
@@ -1899,12 +2498,15 @@
     position: relative;
     height: 100%;
   }
+  /* the guides — short stubs that carry the eye from the word to the bar, held
+     light on purpose. They are only this quiet because the bars are long: any
+     more weight and five of them read as five row rules. */
   .gi-line {
     position: absolute;
     top: 50%;
     margin-top: -0.5px;
     height: 1px;
-    background: var(--ink-a40);
+    background: color-mix(in srgb, var(--ink) 22%, transparent);
     transition: background-color 0.3s ease;
   }
   .gi-line--belief {
@@ -1915,13 +2517,13 @@
     right: 0;
     transform-origin: right;
   }
-  /* the red dimension line struck across the void — a measurement, not a
-     connector: a hairline with end-serifs, the deviation set above it. */
+  /* the measurement itself — a struck bar with end-serifs, the reading set
+     into it. This is the exhibit's primary mark. */
   .gi-measure {
     position: absolute;
     top: 50%;
-    margin-top: -0.75px;
-    height: 1.5px;
+    margin-top: -1.75px;
+    height: 3.5px;
     background: var(--red);
     transition:
       height 0.3s ease,
@@ -1931,9 +2533,9 @@
   .gi-measure::after {
     content: "";
     position: absolute;
-    top: -3px;
-    width: 1.5px;
-    height: 7px;
+    top: -8.25px;
+    width: 2px;
+    height: 20px;
     background: var(--red);
   }
   .gi-measure::before {
@@ -1942,16 +2544,26 @@
   .gi-measure::after {
     right: 0;
   }
-  .gi .gi-dev {
+  /* the reading sits ON the bar, centred between the end-serifs, with the
+     paper knocked out behind it — the bar reads as broken for the number. */
+  .gi-dev {
     position: absolute;
-    bottom: 50%;
-    margin-bottom: 8px;
-    text-align: center;
-    font-size: 10px;
-    letter-spacing: 0.06em;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gi .gi-dev-n {
+    background: var(--paper);
+    padding: 0 0.5em;
+    font-family: var(--app);
+    font-weight: 500;
+    font-size: clamp(16px, 1.45vw, 21px);
+    letter-spacing: 0.04em;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
-    color: var(--ink-soft);
-    transition: color 0.3s ease;
+    color: var(--red);
   }
 
   /* micro-interaction — deliberate, never flashy. Each hover rule re-declares
@@ -1963,104 +2575,116 @@
   }
   .gi-row:hover .gi-line,
   .js .gi.is-in .gi-row:hover .gi-line {
-    background: var(--ink);
+    background: var(--ink-a40);
     transition: background-color 0.25s ease;
   }
   .gi-row:hover .gi-measure,
   .js .gi.is-in .gi-row:hover .gi-measure {
-    height: 2.5px;
-    margin-top: -1.25px;
+    height: 4.5px;
+    margin-top: -2.25px;
     transition:
       height 0.25s ease,
       margin-top 0.25s ease;
   }
-  .gi-row:hover .gi-dev,
-  .js .gi.is-in .gi-row:hover .gi-dev {
-    color: var(--red);
-    transition: color 0.25s ease;
-  }
 
-  /* the verdict — the one finding, on the centre line */
-  .gi-verdict {
-    margin-top: calc(var(--u) * 4);
-    padding-top: calc(var(--u) * 3);
-    border-top: 1px solid var(--hair);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 7px;
+  /* THE FINDING — the exhibit's last ROW, not a footer under it. Same grid,
+     same axis, same marks; only heavier and at conclusion scale. Read across,
+     the row is a sentence: what was measured · how much · across what. Its bar
+     is drawn on the same scale as the five above, so it also reads as their
+     mean. Extra air above it is the only thing separating it from the run —
+     no rule, because a rule is exactly what would make this a footer again. */
+  /* the separation from the run is carried by this row's own extra height, not
+     by a margin — a margin would put a break in the axis where the tail meets
+     the run's piece, and the two have to abut to read as one line. 1.3 is the
+     smallest multiple that still reads as "the run ended, here is what it adds
+     up to"; below that the finding becomes a sixth datum. */
+  .gi-row--sum {
+    height: auto;
+    min-height: calc(var(--gi-rowh) * 1.45);
   }
-  .gi-verdict-mark {
-    width: 7px;
-    height: 7px;
-    background: var(--red);
-    transform: rotate(45deg);
-  }
-  .gi .gi-verdict-lead {
+  .gi .gi-summary-lead {
+    text-align: right;
+    padding-right: var(--gi-wordpad);
     color: var(--red);
-    font-size: 10px;
-    letter-spacing: 0.26em;
+    font-size: clamp(11.5px, 1.02vw, 14px);
+    letter-spacing: 0.3em;
+    line-height: 1.3;
   }
-  .gi-verdict-val {
+  /* the same mark, pressed harder: heavier strike, taller end-serifs, and the
+     reading inside it stepped up from 19px to display scale */
+  .gi-row--sum .gi-measure {
+    height: 5px;
+    margin-top: -2.5px;
+  }
+  .gi-row--sum .gi-measure::before,
+  .gi-row--sum .gi-measure::after {
+    top: -13.5px;
+    width: 2.5px;
+    height: 32px;
+  }
+  .gi .gi-summary-val {
     font-family: var(--display);
+    font-weight: 440;
+    /* sized against the ROW, not the page: the row pitch closes on a short
+       screen, and a numeral that keeps growing past it crowds the last datum
+       above instead of reading as the run's conclusion */
+    font-size: clamp(46px, min(5.4vw, 7.6vh), 76px);
+    line-height: 0.84;
+    letter-spacing: -0.022em;
+    padding: 0 0.22em;
+  }
+  .gi .gi-summary-unit {
+    font-size: 0.28em;
     font-weight: 450;
-    font-size: clamp(30px, 3.4vw, 42px);
-    line-height: 1;
-    color: var(--red);
-    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    margin-left: 0.26em;
   }
-  .gi .gi-verdict-unit {
-    color: var(--red);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    margin-left: 7px;
-  }
-  .gi .gi-verdict-sub {
+  .gi .gi-summary-sub {
+    padding-left: var(--gi-wordpad);
+    max-width: 26ch;
+    font-family: var(--text);
+    font-size: clamp(15.5px, 1.2vw, 17.5px);
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-transform: none;
     color: var(--ink-soft);
-    font-size: 9.5px;
-    letter-spacing: 0.18em;
+  }
+  /* the run's hover belongs to the data rows; the conclusion is not a datum */
+  .gi-row--sum:hover {
+    background: none;
+  }
+  /* the label has to give up some tracking before the word column does */
+  @media (max-width: 1000px) {
+    .gi .gi-summary-lead {
+      letter-spacing: 0.22em;
+    }
   }
 
-  /* the bridge — Survey Surf closes the distance */
-  .gi .gi-bridge {
-    text-align: center;
-    margin-top: calc(var(--u) * 4);
-    font-size: 10.5px;
-    letter-spacing: 0.26em;
-    color: var(--ink);
-  }
-  .gi .gi-bridge::before,
-  .gi .gi-bridge::after {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    width: 48px;
-    border-top: 1px solid var(--hair);
-    margin: 0 16px;
-  }
-
-  /* ---- the entrance, gated behind `.js` so the instrument is fully visible
+  /* ---- the entrance, gated behind `.js` so the exhibit is fully visible
      without JavaScript. A levelling run inking into place: axis calibrates →
-     belief inks in and its line extends to centre → market answers → the red
-     measurements are struck → the verdict lands → the bridge. All resolved as
-     CSS transitions off the one `.is-in` state the observer toggles. ---- */
-  .js .gi .gi-head,
+     belief inks in and its guide extends to centre → market answers → the red
+     measurements are struck → and last, on the same clock, the finding row.
+     All resolved as CSS transitions off the one `.is-in` state the observer
+     toggles. ---- */
+
+  /* the finding rides the same per-row stagger as the data rows, one slot past
+     the last of them, so it lands as the run's final beat rather than early */
+  .gi-row--sum {
+    --i: 6.5;
+  }
+
   .js .gi .gi-label--l,
+  .js .gi .gi-label--axis,
   .js .gi .gi-label--r,
   .js .gi .gi-belief,
   .js .gi .gi-reality,
-  .js .gi .gi-verdict,
-  .js .gi .gi-bridge {
+  .js .gi .gi-summary-lead,
+  .js .gi .gi-summary-sub {
     opacity: 0;
     transform: translateY(8px);
     transition:
       opacity 0.55s ease,
       transform 0.55s ease;
-  }
-  .js .gi .gi-label--axis {
-    opacity: 0;
-    transition: opacity 0.5s ease;
   }
   .js .gi .gi-axis {
     transform: scaleY(0);
@@ -2080,24 +2704,21 @@
       height 0.3s ease,
       margin-top 0.3s ease;
   }
+  /* the reading fades with its bar — never separately: on the finding row the
+     reading IS display type, and sliding it inside its own knockout reads as a
+     glitch rather than as a reveal */
   .js .gi .gi-dev {
     opacity: 0;
-    transition:
-      opacity 0.5s ease,
-      color 0.3s ease;
+    transition: opacity 0.5s ease;
   }
 
-  .js .gi.is-in .gi-head {
-    opacity: 1;
-    transform: none;
-  }
   .js .gi.is-in .gi-label--l {
     opacity: 1;
     transform: none;
-    transition-delay: 0.08s;
   }
   .js .gi.is-in .gi-label--axis {
     opacity: 1;
+    transform: none;
     transition-delay: 0.28s;
   }
   .js .gi.is-in .gi-axis {
@@ -2133,17 +2754,17 @@
   }
   .js .gi.is-in .gi-dev {
     opacity: 1;
-    transition-delay: calc(1.3s + var(--i) * 0.06s);
+    transition-delay: calc(1.42s + var(--i) * 0.06s);
   }
-  .js .gi.is-in .gi-verdict {
+  .js .gi.is-in .gi-summary-lead {
     opacity: 1;
     transform: none;
-    transition-delay: 1.78s;
+    transition-delay: 1.62s;
   }
-  .js .gi.is-in .gi-bridge {
+  .js .gi.is-in .gi-summary-sub {
     opacity: 1;
     transform: none;
-    transition-delay: 2.04s;
+    transition-delay: 1.94s;
   }
 
   /* ---------- §3 JOHARI ---------- */
@@ -2335,226 +2956,194 @@
     letter-spacing: 0;
   }
 
-  .matrix-plate {
-    margin-top: calc(var(--u) * 5);
-  }
   /* ============================================================
-     FIG. 01 · THE BLIND SPOT MATRIX™ — the issue's centre spread.
-     A slim "brief" column states the framework and carries the
-     instrument key; beside it a poster-sized plot sits on
-     engineering-drawing axes (dimension lines, calibration ticks,
-     crop marks). Four rooms hold real research artifacts; the blind
-     spot (SS-04) is a dark, dominant case file, lit by default.
-     Focusing a room brings it forward and dims the rest.
+     CHAPTER 02 · THE BLIND SPOT — the spread.
+
+     Two columns and nothing else. There is no chapter apparatus here at all:
+     no folio, no page number, no rule, no kicker, no figure number, no
+     classification stamp, no revision. Every one of those was removed, so the
+     authority has to come from the composition — a 60/40 split, one large
+     heading, one accent mark, and a lot of deliberate air.
+
+     LEFT (≈59%)  the matrix. It is the primary artifact, so it takes the wider
+                  column AND steps off the grid into the left gutter, which is
+                  what makes it read as the thing the page is about rather than
+                  an illustration set beside the copy.
+     RIGHT (≈41%) the reading column. Written long enough, and set large enough,
+                  to balance ~730px of instrument instead of hanging three short
+                  lines next to it.
+
+     THE SPREAD FITS IN ONE SCREEN. The matrix is a locked composition — fixed
+     intrinsic pixels, scaled uniformly, never re-laid out — so "fit" is a scale
+     factor, not a reflow: `--bs-fit-h` is the tallest the figure may draw and
+     still leave the whole chapter inside the window, and the figure takes the
+     smaller of that and the width of its column.
      ============================================================ */
-  .bsm-plate {
+  .bs-chapter {
+    /* the artifact bleeds left past the grid edge — clipped, never scrolled */
+    overflow: hidden;
+    /* This chapter's own top rhythm, published as a value because the fit
+       calculation below has to subtract it and calc() cannot read padding. On
+       the front page a seam runs above this chapter and splits the break with
+       it (`.seam + .chapter`), so the number is not always the full chapter
+       gap — hence the companion rule under `.seam`. Setting padding-top FROM
+       the variable keeps the two from drifting apart. The window-capped break
+       is the right one here: this chapter answers to the window. */
+    --bs-top: var(--chapter-gap-fit);
+    padding-top: var(--bs-top);
+  }
+  /* the seam already carries the page-turn, so the chapter under it takes the
+     other half of that one break. Mirrors `.seam + .chapter` above — matched
+     selector weight, same value. */
+  .seam + .bs-chapter {
+    --bs-top: calc(var(--chapter-gap) * 0.58);
+  }
+  .bs-spread {
+    /* the window, less the sticky masthead, less this chapter's top rhythm and
+       the air under its foot. Every term is read from the value that actually
+       produces it, so the fit survives any of them changing. */
+    --bs-fit-h: calc(100vh - var(--masthead-h) - var(--bs-top) - var(--u) * 4);
+    /* how far the artifact steps off the grid into the gutter */
+    --bs-bleed: calc(var(--pad-x) * 0.62);
+    display: grid;
+    grid-template-columns: minmax(0, 1.34fr) minmax(0, 1fr);
+    column-gap: clamp(36px, 3.8vw, 72px);
+    align-items: start;
+    padding-bottom: var(--u);
+  }
+
+  /* ── LEFT · the artifact ── */
+  .bs-plot {
+    min-width: 0;
+    margin-left: calc(var(--bs-bleed) * -1);
+  }
+
+  /* ── RIGHT · the reading column ──
+     Dropped off the top edge rather than aligned to it: the heading sits level
+     with the plot itself, not with the small axis label floating above it, so
+     the two columns start on the line the eye reads as the top. */
+  .bs-read {
+    min-width: 0;
+    padding-top: calc(var(--u) * 3);
+  }
+  /* the one accent — a mark, not a label: it opens the column without naming it */
+  .bs-read-mark {
+    display: block;
+    width: 46px;
+    height: 3px;
+    background: var(--red);
+    margin-bottom: clamp(12px, 2.2vh, 18px);
+  }
+  /* THE TYPE IS CAPPED BY THE WINDOW'S HEIGHT AS WELL AS ITS WIDTH — the `vh`
+     term in each min(). The matrix beside this column scales down on a short
+     window (see --bs-fit-h); without the vh term the essay would not, and the
+     one thing this spread promises — everything on one screen — would break at
+     exactly the sizes where it matters. Width still leads: vh only ever binds
+     on a window too short for the column it is next to. */
+  .bs-read .h2 {
+    font-size: clamp(42px, min(4.5vw, 7.5vh), 70px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: clamp(14px, 2.4vh, 20px);
+  }
+  /* the deck — one line of display type that states the idea before the essay
+     explains it. A second voice, not a larger paragraph. */
+  .bs-read-deck {
+    font-family: var(--display);
+    font-weight: 440;
+    font-size: clamp(19px, min(1.8vw, 2.95vh), 26px);
+    line-height: 1.26;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: clamp(14px, 2.4vh, 20px);
+  }
+  .bs-read-body {
+    font-family: var(--text);
+    font-size: clamp(15.5px, min(1.3vw, 2vh), 19px);
+    line-height: 1.55;
+    color: var(--ink-faint);
+  }
+  .bs-read-body + .bs-read-body {
+    margin-top: clamp(11px, 1.7vh, 14px);
+  }
+  .bs-read-cta {
+    display: inline-block;
+    margin-top: clamp(14px, 2.6vh, 22px);
+  }
+  .bs-read-cta span {
+    display: inline-block;
+    transition: transform var(--dur-base) var(--ease-settle);
+  }
+  @media (hover: hover) {
+    .bs-read-cta:hover span {
+      transform: translateX(4px);
+    }
+  }
+
+  /* ============================================================
+     THE BLIND SPOT MATRIX — the chapter's hero artifact.
+
+     Not a plate any more. There is no figure number, no title line, no
+     revision, no classification caption and NO FRAME: the only thing that draws
+     the plot is the hairline cross between the four rooms. The quadrants are
+     the composition.
+
+     Four rooms, and each holds only what earns its space — a triage word, a
+     name, one line, one verbatim, and the coordinate that places it. The
+     source chips, sentiment read-outs, confidence bars, summary tiles and
+     evidence strips that used to crowd their feet are gone; the rooms are
+     padded like a page instead, because the whitespace is the refinement.
+
+     The blind spot (top-right) is the dark case file that argues in three beats
+     and stays lit by default. Focusing any room brings it forward and dims the
+     rest — an opacity change and a soft lift, never a resize.
+     ============================================================ */
+
+  /* ───────────── The instrument ─────────────
+     ONE LOCKED COMPOSITION. Authored once at a fixed intrinsic size (all px —
+     no vw, no fr against the viewport) and scaled as a single rigid object.
+     Nothing inside ever reflows, wraps or re-weights; it only scales, the way a
+     printed figure does.
+
+     THE PLOT IS A PERFECT SQUARE BY ARITHMETIC, not by luck. The stage is two
+     rows — the x-axis block over the plot — and two columns — the y-axis over
+     the same plot. Both resolve to --bsm-plot, so the square holds however the
+     figure is scaled. Change one number here and the other three follow. */
+  .bsm-instrument {
+    --bsm-plot: 700; /* the square plot's side          (unitless px) */
+    --bsm-yw: 40; /* the y-axis column               (unitless px) */
+    --bsm-gap: 14; /* y-axis → plot                   (unitless px) */
+    --bsm-xaxis: 56; /* the x-axis block above the plot (unitless px) */
+
     --bsm-red-lit: #e2795f; /* the pen, legible on the dark panel */
     --bsm-panel: #14120c; /* the blind room — near-black ink */
     --bsm-paper-dim: rgba(247, 244, 236, 0.66);
     --bsm-paper-faint: rgba(247, 244, 236, 0.4);
     --bsm-onink-hair: rgba(247, 244, 236, 0.12);
-    position: relative;
-    padding-top: calc(var(--u) * 4);
-  }
-  .bsm {
-    display: grid;
-    grid-template-columns: minmax(272px, 336px) minmax(0, 1fr);
-    gap: clamp(30px, 3.4vw, 60px);
-    align-items: start;
-    margin-top: calc(var(--u) * 4);
-  }
 
-  /* ───────────── The brief (left) ───────────── */
-  .bsm-brief {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  .bsm-kicker {
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: calc(var(--u) * 1.75);
-    padding-bottom: 9px;
-    border-bottom: 1px solid var(--ink);
-  }
-  .bsm-title {
-    font-family: var(--display);
-    font-weight: 460;
-    font-size: clamp(25px, 2.5vw, 34px);
-    line-height: 1.08;
-    letter-spacing: -0.014em;
-    margin-bottom: calc(var(--u) * 2);
-  }
-  .bsm-title em {
-    font-style: italic;
-    font-weight: 430;
-    color: var(--red);
-  }
-  .bsm-thesis {
-    font-family: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ink-faint);
-    margin-bottom: calc(var(--u) * 2);
-  }
-  .bsm-turn {
-    font-family: var(--text);
-    font-size: 15px;
-    line-height: 1.58;
-    color: var(--ink);
-    margin-bottom: calc(var(--u) * 3.5);
-    padding-left: 16px;
-    border-left: 2px solid var(--red-a35);
-  }
-  .bsm-turn-lead {
-    font-family: var(--display);
-    font-style: italic;
-    font-weight: 520;
-    color: var(--red);
-  }
-
-  /* instrument key — the legend as a control panel */
-  .bsm-block-label {
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    padding-bottom: 9px;
-    border-bottom: 1px solid var(--ink);
-    margin-bottom: calc(var(--u) * 0.5);
-  }
-  .bsm-key {
-    margin-bottom: calc(var(--u) * 3.5);
-  }
-  .bsm-key ul {
-    list-style: none;
+    container-type: inline-size;
     margin: 0;
-    padding: 0;
-  }
-  .bsm-key-row {
-    display: grid;
-    grid-template-columns: 13px 80px 1fr;
-    gap: 11px;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--rule14);
-  }
-  .bsm-key-row:last-child {
-    border-bottom: none;
-  }
-  .bsm-key-swatch {
-    width: 12px;
-    height: 12px;
-    border: 1px solid var(--ink);
-    position: relative;
-  }
-  .bsm-key-row--ignore .bsm-key-swatch {
-    background: transparent;
-    border-color: var(--hair);
-  }
-  .bsm-key-row--study .bsm-key-swatch {
-    background: var(--ink-a12);
-  }
-  .bsm-key-row--unknown .bsm-key-swatch {
-    background: transparent;
-    border-style: dashed;
-    border-color: var(--ink-a40);
-  }
-  .bsm-key-row--critical .bsm-key-swatch {
-    background: var(--ink);
-    border-color: var(--ink);
-  }
-  .bsm-key-row--critical .bsm-key-swatch::after {
-    content: "";
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--red);
-  }
-  .bsm-key-mark {
-    font-family: var(--app);
-    font-weight: 700;
-    font-size: 9.5px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink);
-    align-self: center;
-  }
-  .bsm-key-row--critical .bsm-key-mark {
-    color: var(--red);
-  }
-  .bsm-key-text {
-    font-family: var(--text);
-    font-size: 12.5px;
-    line-height: 1.35;
-    color: var(--ink-soft);
-  }
-
-  /* method metadata + reviewer stamp */
-  .bsm-meta {
-    margin-top: auto;
-    padding-top: calc(var(--u) * 2);
-    border-top: 1px solid var(--hair);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 14px;
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-  .bsm-meta span {
-    white-space: nowrap;
-  }
-  .bsm-stamp {
-    margin-left: auto;
-    color: var(--red);
-    font-weight: 700;
-    border: 1px solid var(--red-a35);
-    border-radius: 2px;
-    padding: 3px 9px;
-    transform: rotate(-2.5deg);
-    letter-spacing: 0.12em;
-  }
-
-  /* ───────────── The instrument (right) ─────────────
-     The plot is ONE locked composition. It is authored once at a fixed
-     intrinsic size (.bsm-stage, all px — no vw, no fr-against-viewport) and
-     scaled as a single rigid object to fit its column (.bsm-figure). This is
-     pure CSS: no ResizeObserver, no viewport math, no layout recalculation.
-     Aspect ratio is preserved at every breakpoint; nothing inside ever
-     reflows, wraps or shifts — it only ever scales uniformly. */
-  .bsm-instrument {
-    --bsm-yw: 44px;
-    --bsm-lower-gap: 16px;
     min-width: 0;
   }
   .bsm-figure {
-    --fig-w: 780; /* intrinsic design width  (unitless px) */
-    --fig-h: 1060; /* intrinsic design height (unitless px) */
+    --fig-w: calc(var(--bsm-yw) + var(--bsm-gap) + var(--bsm-plot));
+    --fig-h: calc(var(--bsm-xaxis) + var(--bsm-plot));
+    /* scale = min(1, column ÷ design width, fit height ÷ design height). The
+       second term is what keeps the whole spread inside one screen: on a short
+       window the figure comes down as one piece rather than running off the
+       bottom. tan(atan2(<length>, 1px)) reads a length as a unitless number,
+       because length ÷ length is illegal in calc(). At or above the design size
+       it locks at exactly 1 → pixel-stable on a wide, tall screen. */
+    --bsm-scale: min(
+      1,
+      calc(tan(atan2(100cqw, 1px)) / var(--fig-w)),
+      calc(tan(atan2(var(--bs-fit-h, 200vh), 1px)) / var(--fig-h))
+    );
     position: relative;
-    container-type: inline-size;
-    width: 100%;
-    max-width: calc(var(--fig-w) * 1px);
-    margin-inline: auto;
-    /* aspect-ratio reserves the correct *scaled* height in flow so following
-       content never jumps as the figure shrinks. The stage is taken out of
-       flow (absolute, below) — otherwise its fixed intrinsic height would
-       defeat aspect-ratio and leave dead space beneath the figure. */
-    aspect-ratio: var(--fig-w) / var(--fig-h);
+    /* the box the figure actually occupies in flow — the scaled size, so no
+       dead space ever collects beneath it */
+    width: calc(var(--fig-w) * var(--bsm-scale) * 1px);
+    height: calc(var(--fig-h) * var(--bsm-scale) * 1px);
   }
   .bsm-stage {
     position: absolute;
@@ -2562,22 +3151,22 @@
     left: 0;
     width: calc(var(--fig-w) * 1px);
     height: calc(var(--fig-h) * 1px);
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: calc(var(--bsm-xaxis) * 1px) minmax(0, 1fr);
     transform-origin: top left;
-    /* scale = min(1, containerWidth / designWidth). tan(atan2()) reads the
-       container-query width as a unitless number (length÷length is illegal in
-       calc). At or above the design width it locks at exactly 1 → pixel-stable
-       on wide screens; below it, the whole figure shrinks in one piece. */
-    --bsm-scale: min(1, calc(tan(atan2(100cqw, 1px)) / var(--fig-w)));
     transform: scale(var(--bsm-scale));
   }
 
-  /* axes */
+  /* ───────────── The axes ─────────────
+     A caption, a hairline with arrow terminators, and the two ends named. The
+     calibration ticks that used to run along both dimension lines have been
+     dropped — they were instrument noise, and the axis reads as a measurement
+     without them. */
   .bsm-axis-cap {
     font-family: var(--app);
     font-weight: 600;
     font-size: 9.5px;
+    line-height: 1.2;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--ink);
@@ -2587,8 +3176,12 @@
     letter-spacing: 0;
   }
   .bsm-axis--x {
-    margin-left: calc(var(--bsm-yw) + var(--bsm-lower-gap));
-    margin-bottom: 12px;
+    /* sits over the plot, clear of the y-axis column */
+    margin-left: calc((var(--bsm-yw) + var(--bsm-gap)) * 1px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 9px;
   }
   .bsm-axis--x .bsm-axis-cap {
     display: block;
@@ -2597,22 +3190,15 @@
   .bsm-dim--x {
     position: relative;
     display: block;
-    height: 9px;
-    margin: 7px 2px 0;
-    border-bottom: 1px solid var(--hair);
-    background: repeating-linear-gradient(
-        to right,
-        var(--hair) 0 1px,
-        transparent 1px,
-        transparent 41px
-      )
-      left bottom / 100% 5px no-repeat;
+    height: 1px;
+    margin: 9px 2px 0;
+    background: var(--hair);
   }
   .bsm-dim--x::before,
   .bsm-dim--x::after {
     content: "";
     position: absolute;
-    bottom: -3.5px;
+    top: -3.5px;
     width: 0;
     height: 0;
     border-top: 4px solid transparent;
@@ -2636,6 +3222,7 @@
     font-family: var(--app);
     font-weight: 500;
     font-size: 9px;
+    line-height: 1.2;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -2643,9 +3230,9 @@
 
   .bsm-lower {
     display: grid;
-    grid-template-columns: var(--bsm-yw) minmax(0, 1fr);
-    gap: var(--bsm-lower-gap);
-    flex: 1;
+    grid-template-columns: calc(var(--bsm-yw) * 1px) minmax(0, 1fr);
+    gap: calc(var(--bsm-gap) * 1px);
+    min-height: 0;
   }
   .bsm-axis--y {
     position: relative;
@@ -2675,15 +3262,8 @@
     right: 0;
     top: 4px;
     bottom: 4px;
-    width: 9px;
-    border-right: 1px solid var(--hair);
-    background: repeating-linear-gradient(
-        to bottom,
-        var(--hair) 0 1px,
-        transparent 1px,
-        transparent 41px
-      )
-      right center / 5px 100% no-repeat;
+    width: 1px;
+    background: var(--hair);
   }
   .bsm-dim--y::before,
   .bsm-dim--y::after {
@@ -2704,63 +3284,42 @@
     border-top: 6px solid var(--ink);
   }
 
-  /* the plot — a fixed 2×2, frozen at the blind-spot-dominant weighting.
-     The quadrants NEVER re-weight on hover/focus: no grid-template transition,
-     no size animation. Focus only changes opacity + a subtle glow (below). */
+  /* ───────────── The plot ─────────────
+     NO OUTER BORDER, no crop marks, no registration ticks — the 1px cross
+     between the rooms is the entire drawing. It is set in --hair rather than
+     full ink so the dark room stays the darkest thing on the page.
+
+     The weighting is frozen blind-spot-dominant and NEVER re-weights on
+     hover/focus: no grid-template transition, no size animation. */
   .bsm-grid {
     position: relative;
     display: grid;
-    grid-template-columns: 0.82fr 1.18fr;
-    grid-template-rows: 1.18fr 0.82fr;
+    /* minmax(0, …) is LOAD-BEARING, not defensive. A bare `fr` track carries an
+       implicit `auto` minimum, so a room whose content outgrew its share used to
+       stretch its row — which quietly turned the square into a 650 × 696
+       rectangle. Pinning the minimum to 0 makes the fr ratio authoritative and
+       the square exact; the rooms are then sized to fit inside it with air to
+       spare (measured, not assumed — see the room comments). */
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    grid-template-rows: minmax(0, 1.14fr) minmax(0, 0.86fr);
     gap: 1px;
-    background: var(--ink);
-    border: 1px solid var(--ink);
+    background: var(--hair);
     height: 100%;
   }
 
-  /* crop marks — just outside the frame corners */
-  .bsm-crop {
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    z-index: 4;
-    pointer-events: none;
-  }
-  .bsm-crop--tl {
-    top: -6px;
-    left: -6px;
-    border-top: 1px solid var(--ink);
-    border-left: 1px solid var(--ink);
-  }
-  .bsm-crop--tr {
-    top: -6px;
-    right: -6px;
-    border-top: 1px solid var(--ink);
-    border-right: 1px solid var(--ink);
-  }
-  .bsm-crop--bl {
-    bottom: -6px;
-    left: -6px;
-    border-bottom: 1px solid var(--ink);
-    border-left: 1px solid var(--ink);
-  }
-  .bsm-crop--br {
-    bottom: -6px;
-    right: -6px;
-    border-bottom: 1px solid var(--ink);
-    border-right: 1px solid var(--ink);
-  }
-
-  /* rooms */
+  /* ───────────── The rooms ───────────── */
   .bsm-room {
     position: relative;
     min-width: 0;
     overflow: hidden;
     background: var(--paper);
-    padding: 19px 22px;
+    /* padded like a page, not like a card — this is where the air comes from.
+       At the design size the tightest room (bottom-left, 300 × 300) needs ~190px
+       for its content, so ~60px of the box is deliberately empty. */
+    padding: 26px;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 11px;
     text-align: left;
     transition:
       opacity 0.4s ease,
@@ -2787,44 +3346,21 @@
     opacity: 0.46;
     filter: saturate(0.55);
   }
-  /* focus brings a room forward with a subtle glow only — never a resize */
+  /* focus brings a room forward with a subtle lift only — never a resize */
   .bsm-room.is-focus {
     z-index: 3;
     box-shadow:
       inset 0 0 0 1px var(--red-a35),
       0 22px 48px -30px rgba(20, 18, 12, 0.55);
   }
-  .bsm-room-index {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 9px;
-    height: 9px;
-    border-top: 1px solid var(--hair);
-    border-left: 1px solid var(--hair);
-    pointer-events: none;
-  }
-  .bsm-room-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .bsm-room-ref {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 9.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
   .bsm-chip {
+    align-self: flex-start;
     font-family: var(--app);
     font-weight: 700;
     font-size: 8.5px;
     letter-spacing: 0.13em;
     text-transform: uppercase;
-    padding: 3px 7px;
+    padding: 3px 8px;
     border: 1px solid var(--hair);
     border-radius: 2px;
     white-space: nowrap;
@@ -2837,10 +3373,14 @@
   .bsm-chip--unknown {
     border-style: dashed;
   }
+  .bsm-chip--blind {
+    color: var(--bsm-red-lit);
+    border-color: color-mix(in srgb, var(--bsm-red-lit) 45%, transparent);
+  }
   .bsm-room-name {
     font-family: var(--display);
     font-weight: 480;
-    font-size: 22px;
+    font-size: 23px;
     line-height: 1.08;
     letter-spacing: -0.01em;
     display: flex;
@@ -2856,6 +3396,38 @@
     letter-spacing: 0;
     color: var(--ink-soft);
   }
+  .bsm-room-desc {
+    font-family: var(--text);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+  /* the quote and the coordinate anchor to the foot of the room, so in the
+     roomier quadrants the air collects in the middle where it reads as
+     deliberate rather than as an unfilled box */
+  .bsm-room-quote {
+    margin: 0;
+    margin-top: auto;
+    padding-top: 13px;
+    border-top: 1px solid var(--rule14);
+  }
+  .bsm-room-quote-txt {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.32;
+    color: var(--ink);
+  }
+  .bsm-room-quote cite {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--app);
+    font-style: normal;
+    font-size: 8.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
   .bsm-room-coord {
     font-family: var(--app);
     font-weight: 500;
@@ -2864,125 +3436,10 @@
     text-transform: uppercase;
     color: var(--ink-a45);
   }
-  .bsm-room-desc {
-    font-family: var(--text);
-    font-size: 13px;
-    line-height: 1.45;
-    color: var(--ink-faint);
-    max-width: 32ch;
-  }
-  .bsm-room-quote {
-    margin: 3px 0 0;
-    padding-top: 11px;
-    border-top: 1px solid var(--rule14);
-  }
-  .bsm-room-quote-txt {
-    font-family: var(--display);
-    font-style: italic;
-    font-size: 15px;
-    line-height: 1.32;
-    color: var(--ink);
-  }
-  .bsm-room-quote cite {
-    display: block;
-    margin-top: 5px;
-    font-family: var(--app);
-    font-style: normal;
-    font-size: 8.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-  .bsm-room-foot {
-    margin-top: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px 12px;
-    padding-top: 11px;
-    border-top: 1px solid var(--rule14);
-  }
-  .bsm-evrow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  .bsm-ev {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 8.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    border: 1px solid var(--rule14);
-    border-radius: 2px;
-    padding: 2px 6px;
-  }
-  .bsm-room-metrics {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-  }
-  .bsm-sent {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 3px;
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-  .bsm-sent::before {
-    font-size: 7px;
-    line-height: 1;
-  }
-  .bsm-sent.is-up::before {
-    content: "▲";
-  }
-  .bsm-sent.is-down::before {
-    content: "▼";
-  }
-  .bsm-sent.is-flat::before {
-    content: "■";
-  }
-  .bsm-sent.is-down {
-    color: var(--red);
-  }
-  .bsm-conf {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .bsm-conf-bar {
-    position: relative;
-    width: 42px;
-    height: 4px;
-    background: var(--ink-a12);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .bsm-conf-bar > i {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    background: var(--ink);
-  }
-  .bsm-conf-num {
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
   .bsm-room-note {
     position: absolute;
-    right: 13px;
-    bottom: 52px;
+    right: 26px;
+    bottom: 46px;
     max-width: 44%;
     text-align: right;
     font-family: var(--display);
@@ -3000,84 +3457,37 @@
     opacity: 0.92;
   }
 
-  /* ───────────── The blind spot — dark case file ───────────── */
+  /* ───────────── The blind spot — the dark case file ─────────────
+     Three beats and stop: what you assume, what they decided, what it costs.
+     Then the verbatim that proves it, and one confidence reading. The
+     classification tape, the redaction bars, the TRUST / BELONGING / RISK
+     tiles, the summary verdict and the source strip are all removed — the
+     dialogue already says what they said, and saying it a second time made the
+     room read as a report card instead of a finding. */
   .bsm-room--blind {
     background: var(--bsm-panel);
     color: var(--bsm-paper-dim);
-    gap: 7px;
-    padding-top: 36px;
-  }
-  .bsm-room--blind .bsm-room-index {
-    border-color: var(--bsm-onink-hair);
-  }
-  .bsm-blind-tape {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: repeating-linear-gradient(
-      -45deg,
-      var(--red) 0 9px,
-      color-mix(in srgb, var(--red) 72%, #000) 9px 18px
-    );
-    color: var(--paper);
-    font-family: var(--app);
-    font-weight: 700;
-    font-size: 8.5px;
-    letter-spacing: 0.32em;
-    text-indent: 0.32em;
-    text-transform: uppercase;
-  }
-  .bsm-room-head--blind .ff-red,
-  .bsm-pri01 {
-    font-family: var(--app);
-    font-weight: 700;
-    font-size: 9.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--bsm-red-lit);
+    gap: 9px;
+    padding: 24px;
   }
   .bsm-room-name--blind {
     color: var(--paper);
   }
   .bsm-room-tag--blind {
     color: var(--bsm-red-lit);
-  }
-  .bsm-redact {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 9.5px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--bsm-paper-faint);
-  }
-  .bsm-redact .redbar {
-    display: inline-block;
-    height: 11px;
-    width: 62px;
-    background: var(--bsm-paper-dim);
-    border-radius: 1px;
-    transform-origin: left center;
-  }
-  .bsm-redact .redbar--sm {
-    width: 34px;
+    /* the pen circle is drawn ~12px outside the text it wraps, so the tag needs
+       clearance the other room tags do not — otherwise the stroke cuts the "t"
+       of "Spot" */
+    margin-left: 9px;
   }
   .bsm-dialogue {
-    margin: 3px 0 2px;
+    margin: 1px 0 0;
   }
   .bsm-dialogue > div {
     display: grid;
-    grid-template-columns: 96px 1fr;
+    grid-template-columns: 92px 1fr;
     gap: 12px;
-    padding: 7px 0;
+    padding: 5px 0;
     border-bottom: 1px solid var(--bsm-onink-hair);
   }
   .bsm-dialogue dt {
@@ -3097,7 +3507,7 @@
     color: var(--paper);
   }
   .bsm-verbatim {
-    margin: 4px 0 2px;
+    margin: 2px 0 0;
   }
   .bsm-verbatim mark {
     background: var(--red);
@@ -3121,11 +3531,13 @@
     text-transform: uppercase;
     color: var(--bsm-paper-faint);
   }
+  /* the one number left in the figure — it anchors the claim, so it holds the
+     foot of the room with the coordinate under it */
   .bsm-signal {
+    margin-top: auto;
     display: flex;
     align-items: center;
     gap: 11px;
-    margin-top: 2px;
   }
   .bsm-signal-label {
     font-family: var(--app);
@@ -3139,9 +3551,8 @@
   .bsm-meter {
     position: relative;
     flex: 1;
-    height: 5px;
+    height: 3px;
     background: rgba(247, 244, 236, 0.14);
-    border-radius: 3px;
     overflow: hidden;
   }
   .bsm-meter-fill {
@@ -3158,132 +3569,325 @@
     font-size: 17px;
     color: var(--paper);
   }
-  .bsm-pattern {
-    list-style: none;
-    margin: 6px 0 0;
-    padding: 9px 0 0;
-    border-top: 1px solid var(--bsm-onink-hair);
-    display: flex;
-    gap: 18px;
-  }
-  .bsm-pat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .bsm-pat-label {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 8px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .bsm-room-coord--blind {
     color: var(--bsm-paper-faint);
-  }
-  .bsm-pat-val {
-    font-family: var(--display);
-    font-size: 16px;
-    color: var(--paper);
-  }
-  .bsm-pat.is-down .bsm-pat-val {
-    color: var(--bsm-red-lit);
-  }
-  .bsm-verdict {
-    font-family: var(--display);
-    font-size: 17px;
-    line-height: 1.3;
-    color: var(--paper);
-    margin-top: 3px;
-  }
-  .bsm-verdict em {
-    font-style: italic;
-    color: var(--bsm-red-lit);
-  }
-  .bsm-evstack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 6px;
-  }
-  .bsm-evcard {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--bsm-paper-faint);
-    border: 1px solid var(--bsm-onink-hair);
-    border-radius: 2px;
-    padding: 2px 6px;
-  }
-  .bsm-source {
-    margin-top: 6px;
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 8.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--bsm-paper-faint);
-  }
-  /* the dossier speaks for itself — no scribble over the case file */
-  .bsm-room-note--blind {
-    display: none;
   }
 
-  /* ───────────── The classification caption ───────────── */
-  .bsm-cap {
-    margin-top: calc(var(--u) * 3);
-    padding-top: calc(var(--u) * 1.5);
-    border-top: 1px solid var(--hair);
-    font-family: var(--app);
-    font-size: 10px;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    line-height: 1.75;
-  }
-  .bsm-cap strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  /* declassify motion — meters + redaction fill on reveal */
+  /* the figure's one meter draws itself as the artifact lands */
   @media (prefers-reduced-motion: no-preference) {
-    .js .matrix-plate .bsm-meter-fill,
-    .js .matrix-plate .bsm-conf-bar > i,
-    .js .matrix-plate .bsm-redact .redbar {
+    .js .bsm-instrument .bsm-meter-fill {
       transform: scaleX(0);
       transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
     }
-    .js .matrix-plate.is-in .bsm-meter-fill,
-    .js .matrix-plate.is-in .bsm-conf-bar > i,
-    .js .matrix-plate.is-in .bsm-redact .redbar {
+    .js .bsm-instrument.is-in .bsm-meter-fill {
       transform: scaleX(1);
     }
   }
 
-  /* ---------- §4 METHOD — sticky scrollytelling ----------
-     LEFT: one pinned visualization (the perception engine) that morphs through
-     five states. RIGHT: five reading blocks that drive it as they cross the
-     viewport centre. Built on the shared tokens — no new colour, no cards. */
+  /* ---------- §4 METHOD — the engine chapter ----------
+     Two movements. First the INTRODUCTION: kicker, heading and lede, centred
+     across the full grid, addressing the whole chapter once. Then the
+     EXPERIENCE: a three-column spread whose reading matter is nothing but the
+     five stage explanations. Keeping them apart is the point — the reader is
+     introduced to the engine, then watches it run. */
+
+  /* The plate: the chapter's own width, wider than the shared grid. Declared on
+     the chapter so the introduction and the spread below resolve the same
+     number and therefore share both edges. */
+  .chapter--engine {
+    --ms-gutter: clamp(28px, 3vw, 56px);
+    --ms-span: min(1840px, calc(100vw - 2 * var(--ms-gutter)));
+  }
+
+  /* ---- The introduction ----
+     A product page's section opening, not a title page: label, headline, deck,
+     one paragraph, one cue — with no folio, page number or rule decorating it.
+     It stands on the same wide plate as the experience below and is set LEFT,
+     so everything starts on the instrument's own left edge and the copy runs at
+     a real reading length instead of stacking into a narrow centred island. The
+     intervals between the five are deliberately short: one statement, not five
+     stacked blocks. */
+  .ms-open {
+    max-width: none;
+    /* the plate the spread below uses, so their left edges agree exactly */
+    margin-inline: min(0px, calc((100% - var(--ms-span)) / 2));
+    text-align: left;
+  }
+  .ms-open-kick {
+    margin-bottom: calc(var(--u) * 2);
+  }
+  /* the two-class selector is load-bearing: `.h2` is declared later in the
+     cascade, so a single class would lose to its chapter-title clamp */
+  .ms-open .ms-open-title {
+    max-width: none;
+    margin: 0 0 calc(var(--u) * 2.5);
+    font-size: clamp(40px, 6.4vw, 104px);
+    line-height: 0.97;
+    letter-spacing: -0.026em;
+  }
+  /* The second clause takes its own line by construction, not by running out of
+     measure — so the break is the composition, and the pair can be set tight. */
+  .ms-open .ms-open-title em {
+    display: block;
+  }
+  /* the deck — one line of display type bridging the headline and the lede */
+  .ms-open-lead {
+    font-family: var(--display);
+    font-weight: 440;
+    font-size: clamp(22px, 2.1vw, 30px);
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: calc(var(--u) * 1.5);
+  }
+  .ms-open-body {
+    /* ~60-70 characters to the line — a paragraph, not a column */
+    max-width: 60ch;
+    margin: 0;
+    font-size: clamp(19px, 1.85vw, 26px);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  /* the cue — an instruction, not a sentence: it hands the reader to the scroll */
+  .ms-open-cue {
+    margin-top: calc(var(--u) * 2.5);
+    font-family: var(--app);
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* ---- The experience — three columns on the shared grid; no new colour, no
+     cards, no dividers beyond the house hairline.
+
+     LEFT   the pipeline rail: the engine's five stages on a hairline, the
+            running one lit. A live progress readout, not a chapter label.
+     CENTRE the pinned instrument — the perception engine, the hero of the
+            chapter, held on the optical centre of the page.
+     RIGHT  the five stage explanations, and nothing else. Set wide and large
+            enough to balance the figure's mass, so each block reads as
+            annotation on a live instrument rather than a caption beside it.
+
+     THE SPREAD BREAKS THE MEASURE. The type sizes this composition is built at
+     — a 160–210px stage number, a ~70px stage heading, 28–30px reading copy at
+     8-ish words to the line, and an instrument that has to dominate the middle —
+     need roughly 1700px of room. The shared 1400px grid offers 1256px, so the
+     three columns step outside it into a wide plate (up to 1840px), the way a
+     full-page plate breaks the text block in a bound book. The chapter's folio,
+     rule and title stay on the shared grid above, so the chapter still aligns
+     with the ones either side of it; only the plate runs wide.
+
+     Below ~1800px the three asks compete for the same pixels and the ratio
+     resolves them in this order: reading measure first (it is what removes the
+     white space), then the instrument, then the marker. At 1512px that lands at
+     ~7.5 words to the line; from ~1800px up the full brief fits.
+
+     Widths are a ratio, not fixed columns. The reading column runs widest, so
+     the instrument sits a little left of the geometric centre — which is where
+     the eye reads it as centred, balanced against the ink weight of the copy. */
   .ms-scrolly {
-    margin-top: calc(var(--u) * 7);
+    --ms-rail: 15.5fr;
+    --ms-stage: 40.5fr;
+    --ms-read: 44fr;
+    /* the reading measure — only binds past ~2300px, where the column would
+       otherwise outrun the eye */
+    --ms-measure: 760px;
+    /* The line the whole spread starts on. The marker and the running
+       explanation are both aligned to it, so the three columns share a top edge
+       instead of each floating at its own height. The second term of the min()
+       keeps that line clear of the sticky masthead in a short window. */
+    --ms-chamber-h: min(76vh, calc(100vh - var(--masthead-h) * 2.2));
+    --ms-chamber-top: calc((100vh - var(--ms-chamber-h)) / 2);
+    margin-top: calc(var(--u) * 6);
+    /* negative only — never pads the plate back in when the grid is wider */
+    margin-inline: min(0px, calc((100% - var(--ms-span)) / 2));
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: clamp(48px, 6vw, 112px);
+    grid-template-columns:
+      minmax(0, var(--ms-rail))
+      minmax(0, var(--ms-stage))
+      minmax(0, var(--ms-read));
+    column-gap: clamp(24px, 2.2vw, 44px);
     align-items: start;
   }
 
-  /* ---- The pinned instrument ---- */
+  /* ---- LEFT · the live stage marker ----
+     One stage, and only ever one: whichever the engine is running. It is a
+     readout, not a contents list — nothing to scan, nothing to click. The
+     number and its name leave and arrive together (framer-motion, `mode="wait"`
+     in `method-scrolly.tsx`), so the marker turns over like a mechanical
+     counter rather than switching.
+
+     The weights here run heavier than the display face does anywhere else in
+     the issue. That is deliberate: the marker has to hold a whole column
+     against the instrument, so it is sized to balance the figure, not to label
+     it. */
+  /* THE THREE COLUMNS SHARE A TOP EDGE. Each column used to be centred in its
+     own box, and since a 300px marker, an 800px chamber and a 400px column of
+     copy are three different heights, centring them gave the spread three
+     different top edges — which is what made it read as three things standing
+     near each other rather than one spread. So the chamber is given a known
+     height (`--ms-chamber-h`), and the marker and the running explanation are
+     both aligned to where its top edge falls. All three now start on one line,
+     and the leftover space collects at the foot of the outer columns, where a
+     hanging column reads as a device instead of a gap. */
+  .ms-rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    padding-top: var(--ms-chamber-top);
+  }
+  .ms-stage-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--u) * 3.5);
+  }
+  /* the copper mark — the one accent, and the only part that holds still while
+     the stage beneath it turns over: the "live" lamp on the instrument */
+  .ms-stage-tick {
+    flex: none;
+    width: clamp(40px, 4.4vw, 72px);
+    height: 3px;
+    background: var(--red);
+  }
+  .ms-stage-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--u) * 1.5);
+  }
+  /* Chapter-opener scale, not label scale — the number is the anchor the eye
+     lands on first, and it is the widest thing the rail has to hold, so the
+     column is sized around it. */
+  .ms-stage-no {
+    font-family: var(--display);
+    font-weight: 640;
+    font-size: clamp(84px, 11.8vw, 208px);
+    line-height: 0.76;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+    /* lining, tabular figures — an instrument readout: the digits stand full
+       height and never change width between stages */
+    font-feature-settings:
+      "lnum" 1,
+      "tnum" 1;
+  }
+  .ms-stage-name {
+    font-family: var(--display);
+    font-weight: 600;
+    /* "Synthesis" is the longest label and sets the rail's width — the column
+       ratio above is chosen so it clears at this size with room to spare */
+    font-size: clamp(26px, 3.2vw, 54px);
+    line-height: 1.02;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+  }
+
+  /* ---- CENTRE · the observation chamber ----
+     The instrument is the only thing in the chapter that does not sit on the
+     paper. It is watched through a window cut into the page: a near-black field,
+     softly lit at the centre, falling off at the edges. That is what gives the
+     centre column its weight — not a bigger drawing, but a different material.
+
+     It must not read as a card, so there is no border, no drop shadow and no
+     lighter edge — nothing that would make it sit ON the page. The radius is
+     just enough to read as a cut opening, and the light and the vignette are
+     both far softer than they look in the numbers. */
   .ms-visual {
     position: sticky;
     top: 0;
     height: 100vh;
     display: flex;
-    align-items: center;
+    /* the slice fills the pin top to bottom; the instrument centres inside it */
+    align-items: stretch;
     justify-content: center;
   }
-  .ms-visual-inner {
-    width: min(100%, 560px);
+  .ms-chamber {
+    width: 100%;
+    /* Floor to ceiling. The dark field is not an object sitting on the page — it
+       is a vertical slice cut through it, running off the top and bottom edges
+       of the viewport for the whole length of the chapter. So: no height of its
+       own, no radius, no border, no shadow and no vignette shaping it into a
+       rectangle. Nothing marks where it starts or stops but the page edges. */
+    height: 100%;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(24px, 2.6vw, 46px);
+    border-radius: 0;
+    /* one soft light where the instrument sits, and the field itself */
+    background:
+      radial-gradient(
+        70% 40% at 50% 50%,
+        color-mix(in srgb, var(--paper) 7%, transparent),
+        transparent 74%
+      ),
+      var(--chamber);
+    /* the glow stays inside the slice */
+    overflow: hidden;
+  }
+  .ms-chamber .ms-figure {
+    width: 100%;
+    /* mirrors the nameplate above (18px + 3u) so the drawing sits dead centre */
+    padding-bottom: calc(18px + var(--u) * 3);
+  }
+  /* The slice runs floor to ceiling and the caption is gone, so the drawing is
+     capped only by the nameplate above it and by the viewport. On a tall window
+     the column width governs and this never engages; on a short one it keeps the
+     instrument whole instead of letting the field crop it. */
+  .ms-chamber .ms-svg {
+    /* the reserve is the nameplate block (18 + 24) mirrored above and below,
+       plus a little air, so a short window still shows the instrument whole */
+    max-height: min(72vh, calc(100vh - 106px));
+  }
+
+  /* Every mark in the instrument, corrected for the dark field. The geometry and
+     the animation are untouched — only the ink changes hands. */
+  .ms-chamber .ms-dot {
+    fill: var(--paper);
+  }
+  /* These two carry the figure's own animated opacity on top of the alpha set
+     here (the aperture runs at 0.8–0.95, the centroids at 0.9), so the values
+     are pitched high enough that the product still reads as a drawn line on the
+     dark field rather than a rumour of one. */
+  .ms-chamber .ms-centroid {
+    stroke: color-mix(in srgb, var(--paper) 52%, transparent);
+  }
+  .ms-chamber .ms-aperture-ink {
+    stroke: color-mix(in srgb, var(--paper) 42%, transparent);
+  }
+  .ms-chamber .ms-aperture-red,
+  .ms-chamber .ms-pulse {
+    stroke: var(--red-lift);
+  }
+  .ms-chamber .ms-glow,
+  .ms-chamber .ms-core {
+    fill: var(--red-lift);
+  }
+  /* Inside the slice the nameplate is a readout, not a printed caption: no rule
+     under it, nothing that could read as the edge of a container. Its height is
+     locked to one line so the figure can mirror it as padding below the drawing
+     (see `.ms-chamber .ms-figure`) — that is what puts the particle field on the
+     exact centre of the slice rather than a nameplate's height below it. */
+  .ms-chamber .ms-fighead {
+    color: color-mix(in srgb, var(--paper) 68%, transparent);
+    border-bottom: none;
+    padding-bottom: 0;
+    height: 18px;
+    margin-bottom: calc(var(--u) * 3);
+  }
+  .ms-chamber .ms-fighead-l {
+    color: var(--paper);
+  }
+  .ms-chamber .ms-readout {
+    color: var(--red-lift);
+  }
+  .ms-chamber .ms-live-dot {
+    background: var(--red-lift);
   }
   .ms-figure {
     margin: 0;
@@ -3349,8 +3953,11 @@
   }
   .ms-aperture-ink {
     fill: none;
-    stroke: var(--hair);
-    stroke-width: 1;
+    /* Framing ring — a soft warm grey, +60% stroke weight, so it reads as a
+       clear but understated frame instead of disappearing into the paper.
+       No glow, no shadow, no gradient. */
+    stroke: #d0c9bf;
+    stroke-width: 1.6;
   }
   .ms-aperture-red {
     fill: none;
@@ -3368,80 +3975,80 @@
   .ms-core {
     fill: var(--red);
   }
-  .ms-figcap {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 10.5px;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    line-height: 1.8;
-    margin-top: calc(var(--u) * 1.5);
-  }
-  .ms-figcap strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  /* ---- The reading blocks ---- */
+  /* ---- RIGHT · the stage explanations ---- */
   .ms-steps {
     list-style: none;
     margin: 0;
     padding: 0;
+    min-width: 0;
+    /* The run-out. The two sticky columns are 100vh tall, so they can only stay
+       pinned while the grid row still has 100vh beneath them. Without this, the
+       row ended at 93vh with the last stage centred and both columns were pulled
+       up — clipping the marker behind the masthead at exactly the moment the
+       engine resolves to its one point. This holds the pin through the climax. */
+    padding-bottom: 14vh;
   }
+  /* Each block is exactly as tall as the chamber and holds its content at the
+     top, so when a stage is running its explanation begins on the chamber's top
+     edge: block height 76vh → top edge at (100 − 76) / 2 = 12vh, the same line
+     the chamber and the marker start on. */
   .ms-block {
-    min-height: 72vh;
+    min-height: var(--ms-chamber-h);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
-  .ms-block:first-child {
-    min-height: 60vh;
-  }
-  .ms-block:last-child {
-    min-height: 64vh;
-    padding-bottom: calc(var(--u) * 4);
-  }
+  /* The explanation holds the chamber's top line for as long as its stage runs.
+     A block is 76vh tall but stays active across a much longer stretch of
+     scrolling, so without this the heading would climb out of the top of the
+     window while the instrument was still showing its state. Pinned, each
+     annotation arrives on the chamber's top edge, holds there, and is handed
+     off by the next one. */
   .ms-block-inner {
-    max-width: 46ch;
-    opacity: 0.3;
+    position: sticky;
+    top: var(--ms-chamber-top);
+    max-width: var(--ms-measure);
+    /* At this scale a dimmed neighbour is a large grey mass, not a whisper, so
+       the inactive state sits further back than it used to — there should never
+       be any question which stage is running. */
+    opacity: 0.16;
     transition: opacity 0.5s ease;
   }
   .ms-block[data-active="true"] .ms-block-inner {
     opacity: 1;
   }
-  .ms-folio {
-    display: flex;
-    align-items: baseline;
-    gap: 18px;
-    border-top: 1px solid var(--ink);
-    padding-top: 12px;
-    margin-bottom: calc(var(--u) * 2.5);
-    transition: border-color 0.5s ease;
+  /* the rule that opens each explanation — it takes the copper while its stage
+     is running, so the reading column shows the same live state as the marker */
+  .ms-block-rule {
+    display: block;
+    width: clamp(48px, 6vw, 96px);
+    height: 2px;
+    margin-bottom: calc(var(--u) * 3);
+    background: var(--ink);
+    transition: background-color 0.5s ease;
   }
-  .ms-block[data-active="true"] .ms-folio {
-    border-top-color: var(--red);
+  .ms-block[data-active="true"] .ms-block-rule {
+    background: var(--red);
   }
-  .ms-no {
-    font-family: var(--display);
-    font-weight: 440;
-    font-size: 40px;
-    line-height: 1;
+  /* Headline scale, not subhead scale. Each stage is the only thing on screen
+     when it is running, so it is set as that state's headline — and both of these
+     need the two-class selector to outrank `.h3` / `.body-copy` further down the
+     cascade. */
+  .ms-block .ms-heading {
+    margin-bottom: calc(var(--u) * 3);
+    max-width: none;
+    font-size: clamp(30px, 4.6vw, 78px);
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+  }
+  /* Editorial copy, not body text: large, generously led, and given the whole
+     column so the line runs to eight words or so instead of five. */
+  .ms-block .ms-body {
+    max-width: none;
     color: var(--ink);
-  }
-  .ms-label {
-    font-family: var(--app);
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--red);
-  }
-  .ms-heading {
-    margin-bottom: calc(var(--u) * 2);
-    max-width: 20ch;
-  }
-  .ms-body {
-    color: var(--ink);
+    /* the cap is the top of the brief's band: past ~1650px the copy keeps
+       growing so the annotation still holds its height beside the chamber */
+    font-size: clamp(19px, 2.05vw, 34px);
+    line-height: 1.4;
   }
 
   @keyframes ms-live {
@@ -3454,24 +4061,100 @@
     }
   }
 
-  /* Stacked on tablet / mobile: the instrument pins to the top, the blocks
-     scroll beneath it and still drive the morph from the viewport centre. */
+  /* Narrow desktop / landscape tablet — three columns would squeeze the reading
+     measure past the point where the copy is comfortable (past ~28 characters
+     to the line), so the marker moves above the spread as a running readout and
+     the rest drops to two columns: instrument left, explanations right. The
+     composition loses a column, never its balance. */
+  @media (max-width: 1080px) {
+    .ms-scrolly {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: clamp(40px, 5vw, 72px);
+    }
+    .ms-rail {
+      grid-column: 1 / -1;
+      position: static;
+      height: auto;
+      padding-top: 0;
+      margin-bottom: calc(var(--u) * 4);
+    }
+    /* two columns, so there is no third top edge to hold: the chamber goes back
+       to sizing itself and the explanations to centring beside it */
+    .ms-block {
+      min-height: 72vh;
+      align-items: center;
+    }
+    .ms-block-inner {
+      position: static;
+    }
+    /* laid on its side: copper mark, number and name on one baseline */
+    .ms-stage-mark {
+      flex-direction: row;
+      align-items: center;
+      gap: calc(var(--u) * 2.5);
+    }
+    .ms-stage-inner {
+      flex-direction: row;
+      align-items: baseline;
+      gap: calc(var(--u) * 2);
+    }
+    .ms-stage-no {
+      font-size: clamp(56px, 7.4vw, 96px);
+      line-height: 0.8;
+    }
+    .ms-stage-name {
+      font-size: clamp(26px, 3.4vw, 42px);
+    }
+    /* still a floor-to-ceiling slice, just a narrower one */
+    .ms-chamber {
+      padding: 0 clamp(20px, 2.6vw, 36px);
+    }
+    .ms-chamber .ms-svg {
+      max-height: 66vh;
+    }
+  }
+
+  /* Stacked on tablet / mobile: the stage marker, then the instrument pinned to
+     the top with the blocks scrolling beneath it, still driving the morph from
+     the viewport centre. (The chapter introduction already sits above, outside
+     this grid, so nothing needs reordering.) */
   @media (max-width: 900px) {
     .ms-scrolly {
       grid-template-columns: 1fr;
       column-gap: 0;
       margin-top: calc(var(--u) * 5);
     }
+    .ms-rail {
+      margin-bottom: calc(var(--u) * 3);
+    }
+    /* The paper backing stays: the chamber is a rounded opening, and the copy
+       scrolling under it must not show through the corners. It pins BELOW the
+       masthead rather than at 0 — pinned at the very top, the opaque bar covered
+       the instrument's nameplate, which is the only thing naming the running
+       stage once the marker has scrolled away. The band is shortened by the same
+       amount so the reading area below it is unchanged. */
     .ms-visual {
-      top: 0;
-      height: 46vh;
+      top: var(--masthead-h);
+      height: 38vh;
       z-index: 2;
       background: var(--paper);
-      border-bottom: 1px solid var(--hair);
+      padding-bottom: calc(var(--u) * 1.5);
     }
-    .ms-visual-inner {
-      width: 100%;
-      max-width: 380px;
+    /* stacked, the slice turns on its side: a dark band cut across the page,
+       filling the pinned field edge to edge with no corners of its own */
+    .ms-chamber {
+      padding: 0 clamp(16px, 4vw, 24px);
+    }
+    .ms-chamber .ms-svg {
+      max-height: 27vh;
+    }
+    /* the band is a third of the viewport here, so the nameplate and the space
+       mirroring it below the drawing both tighten to keep the field centred */
+    .ms-chamber .ms-fighead {
+      margin-bottom: calc(var(--u) * 1.5);
+    }
+    .ms-chamber .ms-figure {
+      padding-bottom: calc(18px + var(--u) * 1.5);
     }
     .ms-fighead {
       font-size: 9.5px;
@@ -3480,17 +4163,58 @@
     .ms-readout {
       min-width: 0;
     }
-    .ms-svg {
-      max-height: 30vh;
-    }
+    /* Stacked, the instrument owns the top 48vh of the viewport and the copy
+       passes underneath it. Centring each block would tuck its rule and heading
+       behind the figure, so the content rests at the foot of its block instead —
+       it comes to rest in the clear band below the instrument. */
     .ms-block {
-      min-height: 58vh;
+      min-height: 62vh;
+      align-items: flex-end;
     }
     .ms-block:first-child {
-      min-height: 34vh;
+      min-height: 46vh;
+    }
+    /* stacked, nothing is pinned to hold open — the run-out is dead space */
+    .ms-steps {
+      padding-bottom: 0;
     }
     .ms-block-inner {
       max-width: none;
+    }
+    .ms-block .ms-heading {
+      font-size: clamp(28px, 5.4vw, 44px);
+      margin-bottom: calc(var(--u) * 2.5);
+    }
+    .ms-block .ms-body {
+      font-size: 20px;
+      line-height: 1.5;
+    }
+  }
+
+  /* Phone — the marker keeps its authority but stops dwarfing the copy, and the
+     reading copy gives back a little of its leading to fit the line. */
+  @media (max-width: 680px) {
+    .ms-stage-mark {
+      gap: calc(var(--u) * 2);
+    }
+    .ms-stage-tick {
+      width: 28px;
+      height: 2px;
+    }
+    .ms-stage-no {
+      font-size: 46px;
+    }
+    .ms-stage-name {
+      font-size: 24px;
+    }
+    .ms-block .ms-heading {
+      font-size: 30px;
+    }
+    .ms-block .ms-body {
+      font-size: 19px;
+    }
+    .ms-open-cue {
+      margin-top: calc(var(--u) * 3);
     }
   }
 
@@ -3498,42 +4222,332 @@
     .ms-live-dot {
       animation: none;
     }
+    /* The JS side already collapses its durations under this preference (the
+       marker swap and the morph both drop to ~0), so these two must collapse
+       with it — otherwise the instrument would be showing the next stage while
+       the reading column was still half a second behind lighting it. */
+    .ms-block-inner,
+    .ms-block-rule {
+      transition-duration: 0.001s;
+    }
   }
 
-  /* ---------- §4b TRANSCRIPT — the ink spread ---------- */
-  .spread-ink {
-    background: var(--ink);
+  /* ---------- §4b THE TURN — the issue's emotional midpoint ----------
+     One block, two lines, one rule. The quote is set as a single typographic
+     mass — both lines the same size, weight and colour, so the eye runs out
+     of the first straight into the second — offset off the publication's left
+     margin and taken almost to the far edge of the measure. What balances a
+     long horizontal mass is a single ultra-thin vertical left standing on
+     that margin, overshooting the type at both ends. That rule is the only
+     other mark in the section: no quotation marks, no caption, no folio, no
+     attribution, nothing decorative. The ground is the cover's near-black,
+     carrying a paper grain and a wide vignette so the field reads as printed
+     stock rather than as screen-black. */
+  .statement {
+    /* The three figures the whole composition is built from: the margin the
+       rule stands on, the channel the type is pushed off it by, and the right
+       air. The right air is deliberately ~1.5x the left, which is what offsets
+       the block to the left of centre; make them equal and the composition
+       reads as centred no matter how wide the type is. */
+    --st-margin: clamp(var(--pad-x), 6vw, 140px);
+    --st-channel: clamp(18px, 3.2vw, 72px);
+    --st-right: clamp(var(--pad-x), 13vw, 300px);
+
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-content: center;
+    /* The break is paper, above the band — the near-black edge is where this
+       chapter begins, so the whitespace stops there and the padding below is
+       the band's own composition, not part of the gap. */
+    margin-top: var(--chapter-gap);
+    /* compact by intent, and asymmetric: a little more room below the block
+       than above it, so the mass sits marginally high in the band the way a
+       printed headline does */
+    padding: clamp(80px, 11vh, 142px) 0 clamp(96px, 13vh, 168px);
+    background: #060504;
     color: var(--paper);
-    margin-top: var(--section-gap);
-    padding: calc(var(--u) * 10) 0 calc(var(--u) * 9);
   }
-  .spread-ink .folio {
-    color: var(--paper-a62);
+  /* the ground: a wide vignette closing the edges, and one barely-there warm
+     bloom low behind the block. Atmosphere, not an element. */
+  .statement::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      radial-gradient(
+        58% 68% at 38% 62%,
+        color-mix(in srgb, var(--copper) 9%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        128% 104% at 50% 46%,
+        transparent 32%,
+        rgba(0, 0, 0, 0.52) 100%
+      );
+    pointer-events: none;
   }
-  .spread-ink .rule-dbl,
-  .spread-ink .rule-dbl::after {
-    border-color: var(--paper);
+  /* the paper: a generated grain, tiled, at the threshold of perception */
+  .statement::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    opacity: 0.05;
+    pointer-events: none;
   }
-  .transcript-q {
+  /* THE one element. A hairline on the publication's left margin — where every
+     other section on the page begins its text — running past the block at
+     both ends and fading out rather than stopping, so it reads as drawn and
+     not as a border. It is the vertical that a wide, low block of type needs
+     to sit against. */
+  .st-rule {
+    position: absolute;
+    top: 9%;
+    bottom: 9%;
+    left: var(--st-margin);
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--paper) 20%, transparent) 13%,
+      color-mix(in srgb, var(--paper) 20%, transparent) 87%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+  /* The block. Pushed off the rule by the channel and closed by the right
+     air, which puts the first line at 75% of the viewport at every size and
+     leaves two thirds again as much room on the right as on the left. The size
+     follows from the measure rather than the other way round: 4.9vw is what
+     makes the 38-character first line fill ~96% of it — enough to read as a
+     full measure, with enough slack that font metrics can never tip it into a
+     third line. The two sentences then land as two near-equal lines (75% and
+     73% of the viewport) with no authored break anywhere. */
+  .st-quote {
+    margin: 0 var(--st-right) 0 calc(var(--st-margin) + var(--st-channel));
     font-family: var(--display);
-    font-style: italic;
-    font-weight: 420;
-    font-size: clamp(27px, 3.4vw, 43px);
-    line-height: 1.28;
-    max-width: 26ch;
-    margin: calc(var(--u) * 3) 0 calc(var(--u) * 5);
-    text-indent: -0.42em;
+    font-weight: 400;
+    font-size: clamp(28px, 4.9vw, 129px);
+    line-height: 1.16;
+    letter-spacing: -0.02em;
   }
-  .transcript-att {
+  .st-line {
+    display: block;
+  }
+  /* the one accent: the word the argument lands on. Colour only — the same
+     size and weight as everything around it, because the composition is the
+     emphasis. */
+  .st-word {
+    color: var(--copper-l);
+  }
+  /* The entrance: the block arrives as one object and the rule draws in after
+     it. Gated on `@supports selector(:has())` as well as on `.js`, so that
+     where `:has()` is unavailable the rule is simply present from the start
+     rather than stuck at zero opacity. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports selector(:has(*)) {
+      .js .statement .st-rule {
+        transform: scaleY(0.86);
+        transform-origin: 50% 50%;
+        opacity: 0;
+        transition:
+          opacity 1.1s var(--ease-settle) 0.24s,
+          transform 1.1s var(--ease-settle) 0.24s;
+      }
+      .js .statement:has(.reveal.is-in) .st-rule {
+        transform: none;
+        opacity: 1;
+      }
+    }
+  }
+
+  /* ---------- §4c THE INVITATION — the page-turn ----------
+     A divider, not a destination. Two marks: a hairline drawn almost the full
+     width of the grid, and one invitation beneath it on the publication's left
+     margin. Nothing closes the row on the right — the band is too short to need
+     balancing, and a chapter marker out there was what made it read as an empty
+     page rather than as a rule.
+
+     Height is a PRINT rhythm, not a viewport one: the padding is keyed to the
+     measure (vw) rather than to `vh`, so the band never inflates on a tall
+     display.
+
+     IT IS SIZED TO THE LINE IT CARRIES AND NOTHING MORE. The turn, the
+     invitation and the tape are one continuous hand-off, so the band holds only
+     enough paper to let the rule and the line breathe — the reader should read
+     straight out of the dark turn, through the invitation, into the tape. Any
+     more air here and the three read as three disconnected blocks with an empty
+     page between them.
+
+     The padding stays asymmetric, and the short side is still the bottom: the
+     invitation belongs to the tape it leads into, not to the turn it leaves
+     behind. On paper, deliberately — the turn above it is near-black and the
+     tape below it is near-black, and this thin band is the moment the
+     publication touches its own ground between the two. */
+  .dossier-invite {
+    padding: clamp(24px, 2vw, 30px) 0 clamp(15px, 1.3vw, 19px);
+    background: var(--paper);
+    /* The masthead's "Explore the Dossier" lands here, so this band overrides
+       the global anchor rule. Every other section is a chapter with a break
+       above it, and an arriving reader is meant to scroll through most of that
+       break; this one is two marks tall and has no break to spend. It clears
+       the bar outright, with a hand's width of paper above the rule. */
+    scroll-margin-top: calc(var(--masthead-h) + var(--u) * 3);
+  }
+  /* THE SAME BAND, SET AT THE FILE'S FOOT — the line that files it away.
+     It closes a chapter instead of leading into a tape, so its air is the
+     invitation's reversed: a full chapter break above, so the closing stance is
+     finished before the reader is offered the drawer, and nothing below, because
+     the fold ends on this line and the colophon brings its own leading. */
+  .dossier-invite--foot {
+    padding: var(--chapter-gap) 0 0;
+  }
+  .di-in {
+    display: grid;
+    gap: clamp(12px, 1.1vw, 16px);
+  }
+  /* Drawn, not bordered — but it now holds its weight across the grid and only
+     feathers in the last stretch, so it separates the chapter above from the
+     file below instead of dying two thirds of the way over. */
+  .di-rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--hair) 0%,
+      var(--hair) 88%,
+      var(--rule14) 97%,
+      transparent 100%
+    );
+  }
+  .di-line {
+    margin: 0;
+  }
+  .di-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: clamp(12px, 1.3vw, 20px);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(21px, 2.3vw, 31px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: left;
+    cursor: pointer;
+  }
+  /* the underline is drawn on approach — the same pen the reading links use,
+     in the copper this section's conclusion is entitled to */
+  .di-label {
+    background-image: linear-gradient(var(--copper), var(--copper));
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    padding-bottom: 6px;
+    transition: background-size 0.42s var(--ease-draw);
+  }
+  .di-link:hover .di-label,
+  .di-link:focus-visible .di-label {
+    background-size: 100% 1px;
+  }
+  /* ONE GLYPH, TURNED. The publication's forward arrow points on at what it
+     will open, and turns back on itself once the file is open, because the next
+     press is the way back — the same arrow travelling between the two states,
+     never two icons swapped. And because the open state is that glyph reversed,
+     a single hover nudge (`translateX`) reads as a press onward while the file
+     is closed and a step back while it is open, which is the direction each
+     press is about to take the reader. */
+  .di-arrow {
+    display: inline-block;
+    flex: none;
+    color: var(--copper);
     font-family: var(--app);
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--paper-a62);
+    font-size: 0.72em;
+    transition: transform var(--dur-quick) var(--ease-fold);
   }
-  .spread-ink .pen-svg path {
-    stroke: var(--red);
-    stroke-width: 2;
+  .di-link:hover .di-arrow,
+  .di-link:focus-visible .di-arrow {
+    transform: translateX(4px);
+  }
+  .di-link[data-open] .di-arrow {
+    transform: rotate(180deg);
+  }
+  .di-link[data-open]:hover .di-arrow,
+  .di-link[data-open]:focus-visible .di-arrow {
+    transform: rotate(180deg) translateX(4px);
+  }
+
+  /* ---------- THE FOLD — the second half, bound in and opened on request ----
+     Everything from the multiplier to the closing stance sits inside this one
+     element. Nothing is duplicated and nothing is unmounted: the fold clips its
+     contents to nothing until the invitation is taken and clips them away again
+     when the reader is done, so every figure, tab and reveal inside it is the
+     same page it always was.
+
+     FIVE STATES, AND WHAT EACH ONE OWES. `closed` is the filed state. `opening`
+     and `closing` are the two animations, and both travel between two measured
+     pixel heights set inline by the component — height cannot animate to or from
+     `auto`, so the fold is always given two real lengths to move between.
+     `open` and `leaving` (the return glide that precedes a close) carry no rules
+     at all: the fold is simply page then, with no clip and no height of its own,
+     so it reflows with the window like every other chapter.
+
+     Note which states set `height: 0` and which must not. `opening` does,
+     because it is entered from `closed` and its inline height only arrives a
+     frame later — without it the file would flash open. `closing` must NOT,
+     because it is entered from `open`, where the height is `auto`: a zero there
+     would snap the file shut before the animation had a frame to start from.
+
+     Both directions run over `--fold-dur` on the one symmetric curve, and the
+     component's scroll glides run on the same clock, so opening and filing away
+     each read as a single gesture. Opacity is quicker than height and trails it
+     slightly, so the pages are legible almost as soon as they appear. The whole
+     mechanism is gated behind `.js`, so without it the issue is simply one
+     continuous read. */
+  .dossier-fold {
+    scroll-margin-top: var(--masthead-h);
+  }
+  .js .dossier-fold {
+    transition:
+      height var(--fold-dur, 560ms) var(--ease-fold),
+      opacity calc(var(--fold-dur, 560ms) * 0.72) var(--ease-fold) 0.08s;
+  }
+  .js .dossier-fold[data-phase="closed"],
+  .js .dossier-fold[data-phase="opening"],
+  .js .dossier-fold[data-phase="closing"] {
+    overflow: clip;
+  }
+  /* the measured height set while it opens overrides this */
+  .js .dossier-fold[data-phase="closed"],
+  .js .dossier-fold[data-phase="opening"] {
+    height: 0;
+  }
+  .js .dossier-fold[data-phase="closed"],
+  .js .dossier-fold[data-phase="closing"] {
+    opacity: 0;
+  }
+  /* Filing away, the fade leads and does not wait: the reader has asked for the
+     front page back, so the pages let go a beat before the fold finishes. */
+  .js .dossier-fold[data-phase="closing"] {
+    transition:
+      height var(--fold-dur, 560ms) var(--ease-fold),
+      opacity calc(var(--fold-dur, 560ms) * 0.62) var(--ease-fold);
+  }
+  /* WITH THE FILE CLOSED, THE TAPE IS THE FRONT PAGE'S LAST MARK. The fold has
+     no height, so the colophon's chapter break lands directly under the band — a
+     hand's width of empty ivory between two near-black fields, which reads as a
+     page that ran out rather than as a front page that closed. So the break
+     collapses to a hairline of paper while the file is filed away, and comes
+     back the moment it is opened, where it is doing its real job: separating the
+     closing stance from the imprint. */
+  .js body:has(.dossier-fold[data-phase="closed"]) .colophon {
+    margin-top: calc(var(--u) * 3);
   }
 
   /* ---------- §5 MULTIPLIER ---------- */
@@ -3687,15 +4701,73 @@
     margin-right: 10px;
   }
 
-  /* ---------- §6 SOURCES INDEX ---------- */
-  .sources-index {
-    margin-top: calc(var(--u) * 6);
+  /* ---------- §6 ALWAYS LISTENING ----------
+     One argument, one exhibit, one roster. The chapter reads headline → map →
+     sources, so the lede carries the story at near-heading size and the index
+     underneath stays deliberately small: names and reasons, nothing redrawn. */
+  .chapter--listen .opener .standfirst {
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.46;
+    max-width: 34ch;
   }
-  .sources-index .leader-name {
-    font-size: clamp(19px, 2vw, 24px);
+
+  /* The intake, named once: a quiet five-up roster under the spread. Each cell
+     is a printed index entry — hairline, channel, and the reason it is read. */
+  .signal-index {
+    list-style: none;
+    margin: calc(var(--u) * 9) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: clamp(20px, 2.2vw, 30px);
+    row-gap: calc(var(--u) * 4);
   }
-  .sources-index .leader-row {
-    padding: 16px 0;
+  .signal {
+    min-width: 0;
+    padding-top: 11px;
+    border-top: 1px solid var(--rule14);
+  }
+  .signal-name {
+    display: block;
+    font-family: var(--display);
+    font-weight: 470;
+    font-size: 15.5px;
+    line-height: 1.25;
+  }
+  .signal-note {
+    display: block;
+    margin-top: 3px;
+    font-size: 12.5px;
+    line-height: 1.42;
+    color: var(--ink-soft);
+  }
+  /* the roster inks in behind the map, left to right */
+  .js .ink-seq .signal {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+    transition-delay: calc(var(--i, 0) * 0.05s);
+  }
+  .js .ink-seq.is-in .signal {
+    opacity: 1;
+    transform: none;
+  }
+  /* Ten items divide evenly by five and by two, and by nothing in between: a
+     three-up grid orphans the last card and the empty columns beside it become
+     dead space above the flow band. So the roster steps 5 → 2, never 3 or 4. */
+  @media (max-width: 1080px) {
+    .signal-index {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(28px, 5vw, 72px);
+    }
+  }
+  @media (max-width: 720px) {
+    .signal-index {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: calc(var(--u) * 3);
+    }
   }
 
   /* Listening map — the opener exhibit: ten channels converge to one reading. */
@@ -3714,7 +4786,7 @@
     color: var(--ink);
   }
   .listen-head-r {
-    color: var(--ink-soft);
+    color: var(--ink-faint);
   }
   .listen-svg {
     display: block;
@@ -3723,33 +4795,60 @@
     margin-top: calc(var(--u) * 2.5);
     overflow: visible;
   }
+  /* The field: many faint lines, a few carrying a touch more ink so it reads
+     as grain rather than as a chart. Nothing in here is labelled — the drawing
+     argues convergence and the index below names the channels. */
   .listen-lines path {
     fill: none;
     stroke: var(--ink);
     stroke-width: 1;
-    opacity: 0.26;
+    opacity: 0.16;
   }
-  .listen-dot {
-    fill: var(--ink);
+  .listen-lines path.is-lead {
+    opacity: 0.3;
   }
-  .listen-label {
-    font-family: var(--display);
-    font-weight: 470;
-    font-size: 12px;
+  .listen-origins circle {
     fill: var(--ink);
+    opacity: 0.34;
+  }
+  /* signals caught in transit, funnelling into the reading */
+  .listen-motes circle {
+    fill: var(--ink);
+    opacity: 0.36;
+  }
+  /* deeper in the field, barely there — depth, not detail */
+  .listen-motes circle.is-far {
+    opacity: 0.22;
+  }
+  /* the last few before the reading take the pen */
+  .listen-motes circle.is-near {
+    fill: var(--red);
+    opacity: 0.62;
+  }
+  /* The focal point. The knockout ring clears the arriving lines out of the
+     node's own space so the reading stays the one high-contrast mark. */
+  .listen-node-halo {
+    fill: none;
+    stroke: var(--red-a18);
+    stroke-width: 1;
+  }
+  .listen-node-knock {
+    fill: none;
+    stroke: var(--paper-soft);
+    stroke-width: 5;
   }
   .listen-node-ring {
     fill: none;
     stroke: var(--red-a35);
-    stroke-width: 1;
+    stroke-width: 1.25;
   }
   .listen-node-core {
     fill: var(--red);
   }
   .listen-node-label {
     font-family: var(--app);
-    font-weight: 500;
-    font-size: 9px;
+    font-weight: 600;
+    font-size: 9.5px;
     letter-spacing: 0.14em;
     fill: var(--ink);
   }
@@ -3757,54 +4856,89 @@
     font-family: var(--app);
     font-size: 8px;
     letter-spacing: 0.12em;
-    fill: var(--ink-soft);
+    fill: var(--ink-faint);
   }
   .listen-cap {
     margin-top: calc(var(--u) * 2);
+    opacity: 0.72;
   }
   /* Signals flow inward when the map reveals — staggered per source line. */
   .js .listen-map .listen-lines path {
-    stroke-dasharray: 360;
-    stroke-dashoffset: 360;
+    stroke-dasharray: 460;
+    stroke-dashoffset: 460;
   }
   .js .listen-map.is-in .listen-lines path {
     transition: stroke-dashoffset 0.9s ease;
-    transition-delay: calc(var(--i) * 0.06s);
+    transition-delay: calc(var(--i) * 0.035s);
     stroke-dashoffset: 0;
+  }
+  .js .listen-map .listen-origins,
+  .js .listen-map .listen-motes {
+    opacity: 0;
+    transition: opacity 0.6s ease 0.4s;
+  }
+  .js .listen-map.is-in .listen-origins,
+  .js .listen-map.is-in .listen-motes {
+    opacity: 1;
   }
   @media (prefers-reduced-motion: reduce) {
     .js .listen-map .listen-lines path {
       stroke-dashoffset: 0;
     }
+    .js .listen-map .listen-origins,
+    .js .listen-map .listen-motes {
+      opacity: 1;
+      transition: none;
+    }
   }
 
-  /* ---------- §6b FLOW BAND / TICKER ---------- */
-  /* The marquee is contained in the shared Container (.wrap) so its rules and
-     scrolling text align to the same editorial gutter as every other section —
-     nothing reaches the browser edge. The double rule + clip live on the clip
-     element so they span the container measure, not the full viewport. */
+  /* ---------- §6b FLOW BAND / TICKER ----------
+     The one band in the issue that ignores the editorial gutter: no container,
+     no margins — it runs from browser edge to browser edge on a near-black
+     field, warm off-white type with copper separators. A terminal tape that
+     answers the cover rather than the pages it sits between. */
   .ticker {
-    margin-top: var(--section-gap);
+    --tape-bg: #090909;
+    --tape-ivory: #f2eee4;
+    --tape-rule: color-mix(in srgb, var(--copper) 42%, transparent);
+    /* Flush against the invitation it closes — the trailing room lives in that
+       band's padding. The tape is the front page's footer, not a divider: it
+       seals the first half, and whatever the reader opens below it begins with
+       its own chapter gap. */
+    margin-top: 0;
+    background: var(--tape-bg);
   }
   .ticker-clip {
     position: relative;
     overflow: hidden;
-    padding: 15px 0 13px;
-    border-top: 2.5px solid var(--ink);
-    border-bottom: 1px solid var(--ink);
+    padding: 18px 0 17px;
+    border-top: 1px solid var(--tape-rule);
+    border-bottom: 1px solid var(--tape-rule);
   }
-  .ticker-clip::before {
+  /* The tape runs off both ends rather than stopping at them: the type fades
+     into the field while the copper rules stay unbroken, edge to edge. */
+  .ticker-clip::before,
+  .ticker-clip::after {
     content: "";
     position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: clamp(40px, 6vw, 96px);
+    pointer-events: none;
+  }
+  .ticker-clip::before {
     left: 0;
+    background: linear-gradient(to right, var(--tape-bg), transparent);
+  }
+  .ticker-clip::after {
     right: 0;
-    top: 3px;
-    border-top: 1px solid var(--ink);
+    background: linear-gradient(to left, var(--tape-bg), transparent);
   }
   .ticker-track {
     display: flex;
     width: max-content;
-    animation: ss-drift 46s linear infinite;
+    animation: sb-drift 46s linear infinite;
   }
   .ticker-track span {
     font-family: var(--app);
@@ -3814,22 +4948,30 @@
     text-transform: uppercase;
     white-space: nowrap;
     padding-right: 3.2em;
+    color: var(--tape-ivory);
   }
   .ticker-track .t-lead {
-    color: var(--red);
+    color: var(--copper-l);
     font-weight: 700;
   }
   .ticker-track .t-dot {
-    color: var(--ink-soft);
+    color: var(--copper-l);
+    opacity: 0.85;
   }
 
   /* ---------- §7 DOSSIER ---------- */
+  /* ---- The classification band ----
+     The cover sheet of the file: one continuous information strip that runs the
+     whole measure, left edge to right edge. Every cell takes an equal share of
+     whatever space the type leaves over (`flex: 1 1 auto` — grow, never shrink
+     below its own line), so the band always closes on the right edge instead of
+     trailing off with a dead half-page beside it. Dividers stay hairlines and
+     the type stays apparatus: a typeset document header, not a row of chips. */
   .doc-head {
-    margin-top: calc(var(--u) * 7);
+    margin-top: calc(var(--u) * 4);
   }
   .doc-head-cells {
     display: flex;
-    flex-wrap: wrap;
     border-top: 2.5px solid var(--ink);
     border-bottom: 1px solid var(--ink);
     position: relative;
@@ -3843,12 +4985,14 @@
     border-top: 1px solid var(--ink);
   }
   .doc-cell {
+    flex: 1 1 auto;
+    white-space: nowrap;
     font-family: var(--app);
     font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    padding: 16px 22px 13px;
+    padding: 15px 18px 12px;
     border-right: 1px solid var(--rule14);
   }
   .doc-cell strong {
@@ -3865,10 +5009,10 @@
     border-right: none;
   }
   .dossier-tabs {
-    margin-top: calc(var(--u) * 5);
+    margin-top: calc(var(--u) * 3);
   }
   .dossier-panel {
-    padding-top: calc(var(--u) * 5);
+    padding-top: calc(var(--u) * 4);
   }
   .dossier-panel[hidden] {
     display: none;
@@ -4030,7 +5174,8 @@
     --fc-hair: rgba(243, 238, 226, 0.16);
     background: #181612;
     color: var(--fc-ink);
-    margin-top: var(--section-gap);
+    /* the last break of the issue — the same one every chapter opens on */
+    margin-top: var(--chapter-gap);
     padding: calc(var(--u) * 6) 0 calc(var(--u) * 4);
   }
   .colophon .folio {
@@ -4254,7 +5399,7 @@
   }
 
   /* ---------- CONTACT FORM — editorial field set ---------- */
-  .ss-form {
+  .sb-form {
     margin-top: calc(var(--u) * 6);
     max-width: 640px;
   }
@@ -4273,6 +5418,9 @@
   .field {
     padding: calc(var(--u) * 2.5) 0;
     border-bottom: 1px solid var(--rule14);
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease;
   }
   .field:first-child {
     border-top: 1px solid var(--ink);
@@ -4301,6 +5449,7 @@
     font-size: 18px;
     line-height: 1.5;
     color: var(--ink);
+    caret-color: var(--ink);
   }
   .field-input::placeholder,
   .field-textarea::placeholder {
@@ -4308,15 +5457,21 @@
     font-style: italic;
     font-family: var(--display);
   }
+  .field-input:focus,
+  .field-textarea:focus,
   .field-input:focus-visible,
   .field-textarea:focus-visible {
     outline: none;
   }
+  /* On focus the rule darkens to ink and the editor's red pen underlines the
+     active line — a subtle accent that fades in over the transition above. */
   .field:focus-within {
     border-bottom-color: var(--ink);
+    box-shadow: 0 1px 0 0 var(--red);
   }
   .field-textarea {
-    resize: vertical;
+    resize: none;
+    overflow: hidden;
     min-height: 96px;
   }
   .field-error {
@@ -4328,12 +5483,50 @@
     text-transform: uppercase;
     color: var(--red);
   }
+  /* helper line for an informational (non-editable) field — reads in the same
+     quiet italic voice as the inputs' placeholders, so it never looks like a
+     value typed in by the user */
+  .field-note {
+    margin: 2px 0 0;
+    padding: 4px 0;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
   .form-foot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 20px 28px;
     margin-top: calc(var(--u) * 4);
+  }
+  /* Keep the CTA's existing look; add only the interaction — the base slip
+     already transitions background/colour, so we extend it with a slight lift
+     and lock down a clear disabled state. */
+  .sb-form .form-submit {
+    transition:
+      background 0.25s ease,
+      color 0.25s ease,
+      transform 0.2s ease;
+  }
+  .sb-form .form-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+  .sb-form .form-submit:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .sb-form .form-submit:disabled:hover {
+    background: transparent;
+    color: var(--ink);
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-form .form-submit:hover:not(:disabled) {
+      transform: none;
+    }
   }
   .form-status {
     font-family: var(--app);
@@ -4360,6 +5553,33 @@
 }
 
 /* ---------- RESPONSIVE ---------- */
+/* The classification band on one line needs ~1090px of measure (measured, not
+   guessed — nine cells of nowrap apparatus type). It folds at 1260px rather
+   than at the ~1234px where it would actually collide, so font-metric variance
+   between engines can never push the strip into the gutter. Below the fold the
+   band stops pretending to be a single line and becomes the other half of the
+   same idea — a three-across cover-sheet block, still edge to edge, still
+   hairline-ruled, still reading in the same order. Nothing shrinks; the strip
+   simply folds, the way a document header does. */
+@media (max-width: 1260px) {
+  .doc-head-cells {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .doc-cell {
+    white-space: normal;
+  }
+  .doc-cell:nth-child(3n + 1) {
+    padding-left: 0;
+  }
+  .doc-cell:nth-child(3n) {
+    border-right: none;
+  }
+  .doc-cell:nth-child(n + 4) {
+    border-top: 1px solid var(--rule14);
+  }
+}
+
 @media (max-width: 1120px) {
   .row {
     grid-template-columns: 1fr;
@@ -4388,9 +5608,43 @@
   .hpl-photo img {
     object-position: 50% 26%;
   }
+  /* Blind Spot: the spread stacks — artifact first, then the essay. The matrix
+     stops bleeding into the gutter (there is no second column pushing on it any
+     more) and the height cap is released: once the page scrolls to read the
+     essay, holding the figure to one screen buys nothing. */
+  .bs-spread {
+    --bs-fit-h: 200vh;
+    --bs-bleed: 0px;
+    /* minmax(0, …) again, and again load-bearing: a bare `1fr` carries an auto
+       minimum, which makes the track ask the figure how wide it wants to be —
+       and the figure answers with `100cqw` of the track. That circle resolves to
+       the figure's unscaled intrinsic 754px and blows the page open sideways.
+       Pinning the minimum to 0 sizes the track first, so the container query has
+       a real width to scale against. */
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(var(--u) * 6);
+  }
+  .bs-read {
+    padding-top: 0;
+    max-width: 62ch;
+  }
 }
 
 @media (max-width: 900px) {
+  /* ---- The turn ----
+     The composition holds; only the channel and the leading need easing, and
+     the band tightens because a tablet's viewport height inflates the vh
+     padding. */
+  .statement {
+    --st-channel: clamp(16px, 2.6vw, 40px);
+    --st-right: clamp(var(--pad-x), 11vw, 140px);
+
+    padding: clamp(64px, 8vh, 104px) 0 clamp(76px, 9.5vh, 124px);
+  }
+  .st-quote {
+    line-height: 1.18;
+    letter-spacing: -0.016em;
+  }
   /* ---- Colophon: brand over the contact index ---- */
   .colophon-info {
     grid-template-columns: 1fr;
@@ -4399,17 +5653,10 @@
   .colophon-brand {
     grid-column: 1 / -1;
   }
-  /* ---- Blind Spot Matrix: stack the brief over the instrument ---- */
-  .bsm {
-    grid-template-columns: 1fr;
-    gap: clamp(30px, 4vw, 48px);
-  }
-  .bsm-brief {
-    height: auto;
-  }
-  .bsm-meta {
-    margin-top: calc(var(--u) * 2.5);
-  }
+  /* ---- Blind Spot Matrix ----
+     Deliberately NOTHING here. The figure keeps its exact square composition and
+     its axes at every width; .bsm-figure scales the whole thing down as one
+     locked object rather than re-laying it out. ---- */
   .bsp-diagram {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -4440,14 +5687,42 @@
     border-left: none;
     padding-left: 0;
   }
-  .masthead-links a:not(.slip) {
+  /* The contents index drops whole — three destinations set wide apart is a
+     desktop gesture, and half of it is worse than none of it. The page itself
+     still carries every one of them. */
+  .masthead-links {
     display: none;
+  }
+  /* With the index gone the bar is a wordmark and one call, and the two hold a
+     single line beside each other down to the narrowest phone. The box tightens
+     rather than the label shortening: the masthead says exactly what the
+     invitation says. Two posts now, so the middle column goes with the index —
+     the name on one gutter, the call on the other. The 42px height is left
+     alone, because the bar's height is a global constant. */
+  .masthead .masthead-in {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .masthead .slip {
+    padding: 0 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
   }
 }
 
 @media (max-width: 680px) {
   body {
     font-size: 16.5px;
+  }
+  /* Phone: the name gives back the two steps it took on desktop, and no more.
+     A wordmark and a nineteen-character call share a 320px line, and the name
+     is the half that can afford to yield — it is still the largest, boldest,
+     widest-tracked thing in the bar. */
+  .wordmark {
+    font-size: 15.5px;
+    letter-spacing: 0.28em;
+    margin-right: -0.28em;
   }
   /* Primer: drop the decorative meta so the exhibit label stays clean. */
   .bsp-meta {
@@ -4482,51 +5757,108 @@
   .plate {
     padding: 24px 20px 26px;
   }
-  /* The Gap · Fig. 01 — the levelling run holds its horizontal reading at
-     every width (the distance IS the message, so it never stacks); the words
-     and columns tighten and the centre instrument label steps aside. */
+  /* The Gap — the levelling run holds its horizontal reading at every width
+     (the distance IS the message, so it never stacks); the words and columns
+     tighten, the centre heading takes its own line above the two side headings,
+     and the readings lift back off the dimension line, which is now too short
+     to be broken for a number. */
   .gi {
-    --gi-wordcol: clamp(80px, 25vw, 116px);
-    --gi-rowh: clamp(50px, 15vw, 62px);
+    margin-top: calc(var(--u) * 7);
+    --gi-wordcol: clamp(92px, 27vw, 132px);
+    --gi-rowh: clamp(62px, 17vw, 80px);
+    --gi-wordpad: 10px;
   }
   .gi-belief,
   .gi-reality {
-    font-size: clamp(14px, 4.4vw, 19px);
+    font-size: clamp(16px, 4.8vw, 22px);
   }
-  .gi-belief {
-    padding-right: 10px;
-  }
-  .gi-reality {
-    padding-left: 10px;
-  }
+  /* the word columns are too narrow to hold a heading each, so the centre
+     heading takes its own line and the two viewpoints label the outer edges */
   .gi-labels {
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px 14px;
   }
   .gi .gi-label {
     min-width: 0;
-    font-size: 9px;
-    line-height: 1.4;
-    letter-spacing: 0.12em;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    padding: 0;
+  }
+  .gi .gi-label--axis {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    justify-self: center;
   }
   .gi .gi-label--l {
-    justify-self: stretch;
+    grid-row: 2;
+    justify-self: start;
     text-align: left;
   }
   .gi .gi-label--r {
-    justify-self: stretch;
+    grid-row: 2;
+    justify-self: end;
     text-align: right;
   }
-  .gi .gi-label--axis {
+  /* the bar is too short here to be broken for a number, so the reading lifts
+     back off it; the end-serifs come down to match the shorter span */
+  .gi-measure::before,
+  .gi-measure::after {
+    top: -5.5px;
+    height: 14px;
+  }
+  .gi-dev {
+    top: auto;
+    bottom: 50%;
+    align-items: flex-end;
+    padding-bottom: 9px;
+  }
+  .gi .gi-dev-n {
+    background: none;
+    padding: 0;
+    font-size: 11px;
+  }
+  /* the finding keeps its bar but gives up the three-column reading: the word
+     columns cannot hold a tracked label and a whole sentence at this width, so
+     the row opens out and the two stack around the mark instead */
+  .gi-row--sum {
+    display: block;
+    min-height: 0;
+    margin-top: calc(var(--u) * 5);
+    text-align: center;
+  }
+  /* stacked, the finding no longer sits on the run's axis — the tail would
+     just be a stray mark beside the label */
+  .gi-axis--tail {
     display: none;
   }
-  .gi-head {
-    flex-direction: column;
-    gap: 4px;
+  .gi .gi-summary-lead {
+    display: block;
+    text-align: center;
+    padding: 0 0 calc(var(--u) * 2);
+    letter-spacing: 0.22em;
   }
-  .gi .gi-dev {
-    font-size: 9px;
-    margin-bottom: 6px;
+  .gi-row--sum .gi-track {
+    height: clamp(76px, 21vw, 100px);
+  }
+  /* unlike the data rows, the finding's bar IS long enough to be broken */
+  .gi-row--sum .gi-dev {
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    padding-bottom: 0;
+  }
+  /* the size has to be restated: `.gi .gi-dev-n` above sets the row-reading
+     size at this breakpoint and matches this selector's specificity */
+  .gi .gi-summary-val {
+    background: var(--paper);
+    padding: 0 0.2em;
+    font-size: clamp(40px, 11vw, 58px);
+  }
+  .gi .gi-summary-sub {
+    padding: calc(var(--u) * 2) 0 0;
+    margin: 0 auto;
+    max-width: 32ch;
+    text-align: center;
   }
   /* ---- Blind Spot Matrix ----
      Deliberately NO rebuild. The figure keeps its exact 2×2 composition and
@@ -4543,17 +5875,61 @@
   .leader-tag {
     display: none;
   }
+  /* Phone — the cover sheet folds once more, to two across. The row edges are
+     re-cut rather than inherited: which cell closes a row changes with the
+     column count, so flush-left and no-divider-at-the-right move with it. */
+  .doc-head-cells {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .doc-cell {
     padding: 12px 14px 10px;
   }
-  .doc-cell:first-child {
+  .doc-cell:nth-child(odd) {
     padding-left: 0;
+    border-right: 1px solid var(--rule14);
+  }
+  .doc-cell:nth-child(even) {
+    border-right: none;
+  }
+  .doc-cell:nth-child(n + 3) {
+    border-top: 1px solid var(--rule14);
+  }
+  /* an odd cell count leaves the last one alone on its row — let it run the
+     full width rather than sit beside a hole */
+  .doc-cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    border-right: none;
   }
   .hero .h1 {
     font-size: clamp(38px, 10vw, 48px);
   }
-  .transcript-q {
-    font-size: 25px;
+  /* Phone — the block keeps its offset and its rule, but a single column
+     cannot carry 38 characters to a line, so each sentence takes two. The
+     type steps up relative to the column instead of down. */
+  .statement {
+    --st-margin: var(--pad-x);
+    --st-channel: 18px;
+    --st-right: var(--pad-x);
+
+    padding: clamp(56px, 8vh, 84px) 0 clamp(64px, 9vh, 96px);
+  }
+  .st-rule {
+    top: 10%;
+    bottom: 10%;
+  }
+  .st-quote {
+    font-size: clamp(26px, 8vw, 38px);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  /* ---- The invitation ----
+     Phone: the band tightens again around the one line it carries, and keeps
+     the short side at the bottom so the hand-off to the tape survives. */
+  .dossier-invite {
+    padding: clamp(22px, 5vw, 28px) 0 16px;
+  }
+  .di-link {
+    font-size: clamp(20px, 5.6vw, 26px);
   }
   .opener h2,
   .opener .h2 {
@@ -4566,6 +5942,10 @@
     animation: none;
     flex-wrap: wrap;
     width: auto;
+  }
+  /* full-bleed band, so the static tape supplies its own gutter */
+  .ticker-clip {
+    padding-inline: clamp(16px, 4vw, 40px);
   }
 }
 
@@ -4612,10 +5992,9 @@
   }
 }
 
-/* The Gap · Fig. 01 — the levelling run resolves to a still, finished
-   instrument: everything present, nothing in motion. */
+/* The Gap — the levelling run resolves to a still, finished exhibit:
+   everything present, nothing in motion. */
 @media (prefers-reduced-motion: reduce) {
-  .js .gi .gi-head,
   .js .gi .gi-label--l,
   .js .gi .gi-label--axis,
   .js .gi .gi-label--r,
@@ -4623,8 +6002,8 @@
   .js .gi .gi-reality,
   .js .gi .gi-measure,
   .js .gi .gi-dev,
-  .js .gi .gi-verdict,
-  .js .gi .gi-bridge {
+  .js .gi .gi-summary-lead,
+  .js .gi .gi-summary-sub {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

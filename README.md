@@ -1,6 +1,6 @@
-# Survey Surf
+# Sibero
 
-**The perception company.** The production codebase behind Survey Surf's
+**The perception company.** The production codebase behind Sibero's
 marketing site and the full‑stack foundation the product will grow from.
 
 This is not an HTML‑to‑React conversion. The static reference

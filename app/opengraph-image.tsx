@@ -38,9 +38,7 @@ export default function OpengraphImage() {
             fontWeight: 700,
           }}
         >
-          <div>SURVEY</div>
-          <div style={{ color: "#A63A2B", padding: "0 8px" }}>·</div>
-          <div>SURF</div>
+          <div>{siteConfig.wordmark}</div>
         </div>
         <div
           style={{

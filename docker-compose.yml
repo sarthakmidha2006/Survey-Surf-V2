@@ -4,21 +4,21 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: surveysurf-postgres
+    container_name: sibero-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: surveysurf
-      POSTGRES_PASSWORD: surveysurf
-      POSTGRES_DB: surveysurf
+      POSTGRES_USER: sibero
+      POSTGRES_PASSWORD: sibero
+      POSTGRES_DB: sibero
     ports:
       - "5433:5432"
     volumes:
-      - surveysurf-pgdata:/var/lib/postgresql/data
+      - sibero-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U surveysurf -d surveysurf"]
+      test: ["CMD-SHELL", "pg_isready -U sibero -d sibero"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  surveysurf-pgdata:
+  sibero-pgdata:

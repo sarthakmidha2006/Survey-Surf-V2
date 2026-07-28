@@ -8,8 +8,8 @@ import { corrections, philosophyOpener } from "@/lib/content";
 /** Chapter 07 — the corrections column: what we are, and what we refuse to be. */
 export function PhilosophySection() {
   return (
-    <Chapter id={sectionIds.philosophy}>
-      <SectionHeader opener={philosophyOpener} />
+    <Chapter id={sectionIds.philosophy} className="chapter--flow">
+      <SectionHeader opener={philosophyOpener} variant="quiet" />
       <div className="corrections">
         {corrections.map((correction) => (
           <Reveal className="correction" key={correction.assertion}>

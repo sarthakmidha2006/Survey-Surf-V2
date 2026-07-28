@@ -1,13 +1,20 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Slip } from "@/components/ui/button";
 import { submitContact } from "@/lib/actions/contact";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 import type { ActionState } from "@/types";
+
+/** Grow a textarea to fit its content — the field expands as the user types. */
+function autoGrow(el: HTMLTextAreaElement | null) {
+  if (!el) return;
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
+}
 
 /**
  * "See your blind spot" enquiry form.
@@ -19,9 +26,11 @@ export function ContactForm() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       email: "",
@@ -35,29 +44,48 @@ export function ContactForm() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<ActionState>({ status: "idle" });
 
+  // The two starred fields gate the submit button — it stays disabled until
+  // both carry a value, then unlocks.
+  const [name, email] = watch(["name", "email"]);
+  const canSubmit = Boolean(name?.trim()) && Boolean(email?.trim());
+
+  // Auto-growing textareas: merge our measuring ref with the one RHF hands us.
+  const messageReg = register("message");
+  const contextReg = register("competitor");
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+  const contextRef = useRef<HTMLTextAreaElement | null>(null);
+
   function onSubmit(data: ContactInput) {
     setResult({ status: "idle" });
     startTransition(async () => {
       const response = await submitContact(data);
       setResult(response);
-      if (response.status === "success") reset();
+      if (response.status === "success") {
+        reset();
+        // Values are cleared — let the textareas fall back to their base height.
+        requestAnimationFrame(() => {
+          autoGrow(messageRef.current);
+          autoGrow(contextRef.current);
+        });
+      }
     });
   }
 
   return (
-    <form className="ss-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form className="sb-form" onSubmit={handleSubmit(onSubmit)} noValidate>
       <p className="form-legend">
         <span className="req">*</span> Required
       </p>
 
       <div className="field">
         <label className="field-label" htmlFor="contact-name">
-          Your name<span className="req">*</span>
+          Your Name<span className="req">*</span>
         </label>
         <input
           id="contact-name"
           className="field-input"
           type="text"
+          placeholder="Jane Smith"
           autoComplete="name"
           aria-required="true"
           aria-invalid={Boolean(errors.name)}
@@ -73,12 +101,13 @@ export function ContactForm() {
 
       <div className="field">
         <label className="field-label" htmlFor="contact-email">
-          Work email<span className="req">*</span>
+          Work Email<span className="req">*</span>
         </label>
         <input
           id="contact-email"
           className="field-input"
           type="email"
+          placeholder="jane@company.com"
           autoComplete="email"
           aria-required="true"
           aria-invalid={Boolean(errors.email)}
@@ -94,12 +123,13 @@ export function ContactForm() {
 
       <div className="field">
         <label className="field-label" htmlFor="contact-company">
-          Who you are <span className="app">— your company</span>
+          Company
         </label>
         <input
           id="contact-company"
           className="field-input"
           type="text"
+          placeholder="Acme Technologies"
           autoComplete="organization"
           aria-invalid={Boolean(errors.company)}
           aria-describedby={
@@ -115,48 +145,53 @@ export function ContactForm() {
       </div>
 
       <div className="field">
-        <label className="field-label" htmlFor="contact-competitor">
-          Who you’re up against <span className="app">— a rival or two</span>
+        <label className="field-label" htmlFor="contact-message">
+          What are you trying to understand about your market?
         </label>
-        <input
-          id="contact-competitor"
-          className="field-input"
-          type="text"
-          aria-invalid={Boolean(errors.competitor)}
+        <textarea
+          id="contact-message"
+          className="field-textarea"
+          placeholder="e.g. Why are customers choosing competitors over us?"
+          aria-invalid={Boolean(errors.message)}
           aria-describedby={
-            errors.competitor ? "contact-competitor-error" : undefined
+            errors.message ? "contact-message-error" : undefined
           }
-          {...register("competitor")}
+          {...messageReg}
+          ref={(el) => {
+            messageReg.ref(el);
+            messageRef.current = el;
+          }}
+          onInput={(e) => autoGrow(e.currentTarget)}
         />
-        {errors.competitor ? (
-          <span
-            id="contact-competitor-error"
-            className="field-error"
-            role="alert"
-          >
-            {errors.competitor.message}
+        {errors.message ? (
+          <span id="contact-message-error" className="field-error" role="alert">
+            {errors.message.message}
           </span>
         ) : null}
       </div>
 
       <div className="field">
-        <label className="field-label" htmlFor="contact-message">
-          What you want to find out<span className="req">*</span>
+        <label className="field-label" htmlFor="contact-context">
+          Additional context <span className="app">(optional)</span>
         </label>
         <textarea
-          id="contact-message"
+          id="contact-context"
           className="field-textarea"
-          rows={4}
-          aria-required="true"
-          aria-invalid={Boolean(errors.message)}
+          placeholder="Tell us anything that helps us understand your business."
+          aria-invalid={Boolean(errors.competitor)}
           aria-describedby={
-            errors.message ? "contact-message-error" : undefined
+            errors.competitor ? "contact-context-error" : undefined
           }
-          {...register("message")}
+          {...contextReg}
+          ref={(el) => {
+            contextReg.ref(el);
+            contextRef.current = el;
+          }}
+          onInput={(e) => autoGrow(e.currentTarget)}
         />
-        {errors.message ? (
-          <span id="contact-message-error" className="field-error" role="alert">
-            {errors.message.message}
+        {errors.competitor ? (
+          <span id="contact-context-error" className="field-error" role="alert">
+            {errors.competitor.message}
           </span>
         ) : null}
       </div>
@@ -172,8 +207,12 @@ export function ContactForm() {
       />
 
       <div className="form-foot">
-        <Slip type="submit" disabled={isPending}>
-          {isPending ? "Sending…" : "See your blind spot  →"}
+        <Slip
+          type="submit"
+          className="form-submit"
+          disabled={isPending || !canSubmit}
+        >
+          {isPending ? "Sending…" : "See your blind spot  →"}
         </Slip>
         {result.status !== "idle" ? (
           <p

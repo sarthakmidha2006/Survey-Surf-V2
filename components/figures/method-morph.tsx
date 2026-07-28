@@ -153,8 +153,11 @@ function build(): { dots: Dot[]; centroids: Centroid[] } {
   return { dots, centroids };
 }
 
-/** Radius / opacity timelines for the singleton apparatus marks (per state). */
-const APERTURE_INK = { r: [305, 305, 235, 150, 66], o: [0, 0, 0.14, 0.24, 0] };
+/** Radius / opacity timelines for the singleton apparatus marks (per state).
+ *  The ink aperture is the visualization's outer framing ring: its opacity is
+ *  lifted (vs. its former near-invisible 0.14/0.24) so the warm-grey stroke set
+ *  in CSS reads as a clear-but-understated frame. Radii and timing are unchanged. */
+const APERTURE_INK = { r: [305, 305, 235, 150, 66], o: [0, 0, 0.8, 0.95, 0] };
 const APERTURE_RED = { r: [66, 66, 60, 46, 30], o: [0, 0, 0, 0, 0.85] };
 const GLOW = { r: [10, 10, 12, 22, 54], o: [0, 0, 0, 0.08, 0.5] };
 const CORE = { r: [0, 0, 1, 2.5, 7.5], o: [0, 0, 0, 0.35, 1] };
@@ -162,13 +165,7 @@ const CORE = { r: [0, 0, 1, 2.5, 7.5], o: [0, 0, 0, 0.35, 1] };
 const EASE = [0.22, 0.61, 0.36, 1] as const;
 
 /** The live readout printed to the right of the instrument's header. */
-const READOUT = [
-  "unsorted",
-  "aligned",
-  "5 themes",
-  "3 forces",
-  "1 perception",
-];
+const READOUT = ["unsorted", "aligned", "5 themes", "3 forces", "1 perception"];
 
 export function MethodMorph({ active }: { active: number }) {
   const reduced = useReducedMotion();
@@ -180,7 +177,7 @@ export function MethodMorph({ active }: { active: number }) {
   return (
     <figure className="ms-figure" aria-hidden="true">
       <div className="ms-fighead">
-        <span className="ms-fighead-l">SS · Perception Engine</span>
+        <span className="ms-fighead-l">SB · Perception Engine</span>
         <span className="ms-fighead-r">
           <span className="ms-live-dot" />
           <span className="ms-readout">
@@ -206,7 +203,13 @@ export function MethodMorph({ active }: { active: number }) {
         role="presentation"
       >
         <defs>
-          <filter id="ms-glow-blur" x="-80%" y="-80%" width="260%" height="260%">
+          <filter
+            id="ms-glow-blur"
+            x="-80%"
+            y="-80%"
+            width="260%"
+            height="260%"
+          >
             <feGaussianBlur stdDeviation="14" />
           </filter>
         </defs>
@@ -239,9 +242,18 @@ export function MethodMorph({ active }: { active: number }) {
                 key={d.id}
                 className="ms-dot"
                 r={BASE_R}
-                initial={{ x: first.x, y: first.y, scale: first.s, opacity: first.o }}
+                initial={{
+                  x: first.x,
+                  y: first.y,
+                  scale: first.s,
+                  opacity: first.o,
+                }}
                 animate={{ x: p.x, y: p.y, scale: p.s, opacity: p.o }}
-                transition={{ duration: dur, ease: EASE, delay: reduced ? 0 : d.delay }}
+                transition={{
+                  duration: dur,
+                  ease: EASE,
+                  delay: reduced ? 0 : d.delay,
+                }}
               />
             );
           })}
@@ -302,11 +314,6 @@ export function MethodMorph({ active }: { active: number }) {
           transition={{ duration: dur, ease: EASE }}
         />
       </svg>
-
-      <figcaption className="ms-figcap">
-        <strong>FIG. 03 · SS-ENGINE</strong> — scattered opinion → one defensible
-        perception
-      </figcaption>
     </figure>
   );
 }

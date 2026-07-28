@@ -1,4 +1,4 @@
-// Survey Surf — database schema
+// Sibero — database schema
 // Only the models needed today. Future product models (Workspace, Projects,
 // Reports, Evidence, …) are intentionally NOT modelled yet; the schema is kept
 // clean so they can be added without reshaping what exists.

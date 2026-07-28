@@ -2,7 +2,7 @@ import { CompetitiveScatter } from "@/components/figures/competitive-scatter";
 import { BarMeter } from "@/components/ui/bar-meter";
 import { LeaderRow } from "@/components/ui/leader-row";
 import { Marginalia } from "@/components/ui/marginalia";
-import { FigHead, Plate, PlateCaption } from "@/components/ui/plate";
+import { FigHead, Plate } from "@/components/ui/plate";
 import { Reveal } from "@/components/ui/reveal";
 import { Chapter } from "@/components/ui/section";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -73,10 +73,6 @@ export function DossierSection() {
           {dossierEmotionalMap.indexTerms}
         </p>
       </Plate>
-      <PlateCaption>
-        <strong>{dossierEmotionalMap.caption.strong}</strong>
-        {dossierEmotionalMap.caption.rest}
-      </PlateCaption>
     </figure>
   );
 
@@ -95,10 +91,6 @@ export function DossierSection() {
           </p>
         </div>
       </Plate>
-      <PlateCaption>
-        <strong>{dossierCompetitive.caption.strong}</strong>
-        {dossierCompetitive.caption.rest}
-      </PlateCaption>
     </figure>
   );
 
@@ -123,10 +115,6 @@ export function DossierSection() {
             </div>
           </div>
         </Plate>
-        <PlateCaption>
-          <strong>{dossierMessaging.caption.strong}</strong>
-          {dossierMessaging.caption.rest}
-        </PlateCaption>
       </figure>
       <div className="campaigns ink-seq is-in">
         <p className="index-head app">{dossierMessaging.campaignsLabel}</p>

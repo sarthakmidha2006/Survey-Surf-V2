@@ -1,5 +1,5 @@
 /**
- * Editorial content for the Survey Surf front page ("Issue 01").
+ * Editorial content for the Sibero front page ("Issue 01").
  *
  * Copy is modelled as typed data so it can be edited — or later sourced from a
  * CMS — without touching component markup. Presentation-only geometry (SVG
@@ -17,6 +17,7 @@ import type {
   EngineStage,
   EvidenceBoardContent,
   GapContent,
+  Heading,
   HeroContent,
   HeroExhibit,
   HeroPhoto,
@@ -31,18 +32,27 @@ import type {
   ProofCell,
   RelativeGroup,
   SectionOpener,
+  SignalSource,
+  Statement,
   SynthCluster,
 } from "@/types";
 
 /* ============ HERO — THE COVER ============ */
 export const hero: HeroContent = {
   caseFile: "Case File 001",
+  /* Three clauses, three lines. The emphasis is deliberately quiet: one word of
+     extra weight ("Beyond"), a phrase warmed a few percent off the ivory, and
+     the signature lifted a notch into copper. No gradients, one accent family. */
   heading: {
-    lead: "The market already has an opinion of you. You just haven’t",
-    em: "seen it yet.",
+    open: "Listen",
+    strong: "Beyond",
+    warm: "the Noise.",
+    claim: "Discover market intelligence",
+    signOff: "with",
+    brand: "Sibero.",
   },
   standfirst:
-    "We reveal the perception gap between how you see your brand and how the market actually feels.",
+    "We analyze thousands of conversations across diverse datasets to transform scattered opinions into meaningful market insights.",
   primaryCta: { label: "See your blind spot", href: "/contact" },
   secondaryCta: { label: "How it works", href: "#method" },
   metrics: [
@@ -89,72 +99,107 @@ export const heroScene: HeroSceneContent = {
 };
 
 /* ============ FIG. A · THE CONVERSATION STREAM ============
-   The redesigned cover exhibit. Fifty scattered customer opinions drift on the
-   left like dust in sunlight; each emits a thin, curved stream of light that
-   converges — organically, like rivers joining — into one fixed perception
-   card on the far right. The phrases and the card copy are real; the flow
-   geometry and particle field are generated in
+   The cover exhibit. Thousands of scattered customer opinions drift on the left
+   like dust in sunlight; each emits a thin, curved stream of light that
+   converges — organically, like rivers joining — into one fixed market verdict
+   on the far right.
+
+   The copy is split by intent, and the figure treats the two lists differently:
+   `phrases` are the fifteen headline opinions — sharp, near the viewer, and the
+   only ones that feed a visible tributary. `murmur` is the far field: smaller,
+   dimmer, blurred, drifting slower, and never meant to be read. Together they
+   should read as thousands of conversations flowing toward one conclusion.
+
+   The flow geometry and particle field are generated in
    `components/figures/conversation-stream.tsx`. */
 export const conversationStream: ConversationStreamContent = {
+  /* Foreground — the opinions that earn attention. Deliberately balanced:
+     praise, friction and pricing all get a voice, so the verdict reads as a
+     synthesis rather than a testimonial wall. */
   phrases: [
-    "Support is slow",
-    "Too expensive",
-    "Great onboarding",
     "Excellent product",
     "Love the UI",
-    "Buggy updates",
-    "Not for enterprise",
-    "Hard to justify",
     "Premium pricing",
+    "Hard to justify",
+    "Great onboarding",
+    "Buggy updates",
+    "Support is slow",
     "Fast support",
-    "Confusing plans",
-    "Works great",
-    "Needs integrations",
+    "Excellent documentation",
+    "Reliable platform",
     "Switching next month",
-    "Very reliable",
+    "Very intuitive",
+    "Enterprise ready",
+    "Pricing unclear",
+    "Would recommend",
+  ],
+  /* Background — the murmur. Read as texture, not as text. */
+  murmur: [
+    "Confusing pricing",
+    "Slow setup",
+    "Customer support improved",
+    "Needs integrations",
+    "Powerful analytics",
+    "Setup was difficult",
+    "Great reporting",
     "Better than competitors",
+    "Missing features",
+    "Excellent API",
+    "Too expensive",
+    "Hidden costs",
+    "Works well for teams",
+    "Performance issues",
+    "UI feels premium",
+    "Long onboarding",
+    "Amazing documentation",
+    "Not worth switching",
+    "Saved our time",
+    "Great customer success",
+    "Confusing dashboard",
+    "Excellent reliability",
+    "Hard learning curve",
+    "Very scalable",
+    "Renewal concerns",
+    "Wish it was cheaper",
+    "Rock solid",
     "Steep learning curve",
     "Worth every penny",
-    "Feels overpriced",
-    "Beautiful design",
-    "Clunky mobile app",
-    "Best in class",
-    "Slow to load",
-    "Missing key features",
-    "Incredible value",
-    "Support ghosted me",
-    "Intuitive to use",
-    "Too many bugs",
-    "Rock solid",
-    "Pricing is unclear",
-    "Saves us hours",
-    "Hard to cancel",
-    "Polished experience",
-    "Overkill for us",
     "Docs are excellent",
-    "Constant downtime",
-    "Genuinely delightful",
-    "Not worth the cost",
-    "Onboarding was smooth",
-    "Feels enterprise-grade",
-    "Wish it were cheaper",
-    "Setup took minutes",
-    "Lacks reporting",
-    "Highly recommend",
-    "Renewal shock",
-    "Support is world-class",
-    "Too complicated",
-    "Exactly what we needed",
-    "Buggy on launch",
-    "Can’t live without it",
+    "Clunky mobile app",
+    "Saves us hours",
   ],
+  /* The deliverable — the first page of a confidential intelligence report, not a
+     quote from the crowd and not a dashboard. Each level says something the level
+     above it did not: the standfirst characterises the market, the readings
+     measure it, the insight names the constraint, the action names the fix, and
+     the verdict is the call. Nothing is restated.
+
+     Every body is written to a line budget, because the report has to hold a
+     masthead, a standfirst, four readings, two sections and a verdict inside a
+     panel that must never crop against its stage. Two lines here, three there —
+     measured against the rendered measure, not guessed. */
   perception: {
-    eyebrow: "The Market’s Perception",
-    quote: "Excellent product. Too difficult to justify the price.",
-    stats: [
-      { value: "94%", label: "Confidence" },
-      { value: "2.3M", label: "Conversations" },
+    title: "Market Verdict",
+    standfirst:
+      "Perception is strong and consistent. The constraint on growth is commercial, not technical.",
+    readings: [
+      { label: "Confidence", value: "96%" },
+      { label: "Data analysed", value: "2.3M", unit: "signals" },
+      { label: "Sources", value: "12", unit: "channels" },
+      { label: "Signal strength", value: "Very High", qualitative: true },
     ],
+    insight: {
+      label: "Primary Insight",
+      body: "The product experience is consistently praised. Pricing — not quality — is the dominant adoption barrier.",
+    },
+    action: {
+      label: "Recommended Action",
+      body: "Strengthen value communication before feature expansion.",
+    },
+    verdict: {
+      label: "Overall Verdict",
+      value: "Highly Recommended",
+    },
   },
 };
 
@@ -719,7 +764,7 @@ export const heroPhoto: HeroPhoto = {
 
 /* ============ PROOF BAND ============ */
 export const proofFolio = {
-  left: "SS · ISSUE 01 · ON THE RECORD",
+  left: "SB · ISSUE 01 · ON THE RECORD",
   right: "P. 02",
 };
 
@@ -742,57 +787,49 @@ export const proofCells: ProofCell[] = [
    The connective tissue read in the whitespace between chapters. Each closes
    the chapter just read (leadOut — often citing a real figure from it) and
    pulls forward into the next (teaser — a hook, never the next headline, so
-   the running head below never reads twice). Keyed by the boundary they span;
-   wired into the page between the two sections in app/page.tsx. */
-export const chapterSeams: Record<string, ChapterSeam> = {
+   the chapter below opens on its own content). No chapter numbers or running
+   heads. Keyed by the boundary they span; wired into the page between the two
+   sections in app/page.tsx. */
+export const chapterSeams = {
   gapToBlind: {
-    issue: "SS · Issue 01",
+    issue: "SB · Issue 01",
     leadOut: "A thirty-four point gap — measured, and filed.",
     teaser: "But a gap that wide has to be hiding somewhere.",
-    next: "Chapter 02 · The Blind Spot",
     nextHref: "#blindspot",
   },
   blindToMethod: {
-    issue: "SS · Issue 01",
+    issue: "SB · Issue 01",
     leadOut: "Four rooms. Only the one you can’t see decides.",
     teaser: "So how do you get inside a room with no door?",
-    next: "Chapter 03 · How It Works",
     nextHref: "#method",
   },
   multiplierToSources: {
-    issue: "SS · Issue 01",
+    issue: "SB · Issue 01",
     leadOut: "Perception, at last read against the field.",
     teaser: "None of it holds without the signal underneath.",
-    next: "Chapter 05 · Always Listening",
     nextHref: "#sources",
   },
   dossierToPhilosophy: {
-    issue: "SS · Issue 01",
+    issue: "SB · Issue 01",
     leadOut: "A finished file — read in the room where you decide.",
     teaser: "Which leaves one thing left to say plainly.",
-    next: "Chapter 07 · Our Stance",
     nextHref: "#philosophy",
   },
-};
+} satisfies Record<string, ChapterSeam>;
 
 /* ============ THE GAP ============ */
 export const gap: GapContent = {
   opener: {
-    folio: { left: "SS · ISSUE 01 · CHAPTER 01", right: "P. 03" },
-    kicker: "The Costly Gap",
-    kickerNo: "· 01",
-    heading: { lead: "You cannot see yourself the way the market does." },
+    /* no kicker, no chapter number: this chapter opens on the headline alone */
+    heading: { lead: "The clarity" },
     standfirst:
-      "Founders are flying blind — not because they lack data, but because they can’t stand outside their own story. Over time, how you believe you’re seen quietly drifts from how the market actually feels. That drift is invisible. It is also expensive.",
+      "The challenge is rarely collecting more data — it is recognising which signals deserve attention. Every review, support ticket, survey response and customer conversation tells part of the story. Sibero continuously compares how organisations describe themselves against how customers actually experience them, exposing the perception gaps that influence trust, positioning and buying decisions.",
     dropcap: true,
-    marginNote: "the space between is the gap",
   },
   instrument: {
-    figLabel: "Fig. 01 — Perception Deviation",
-    methodLabel: "Survey Surf · Levelling Run",
-    leftLabel: "How you see yourself",
-    rightLabel: "How the market actually sees you",
-    axisLabel: "Deviation",
+    leftLabel: "Self perception",
+    axisLabel: "Perception gap",
+    rightLabel: "Market reality",
     rows: [
       { belief: "Premium", reality: "Expensive", dev: 41 },
       { belief: "Trusted", reality: "Corporate", dev: 22 },
@@ -800,32 +837,39 @@ export const gap: GapContent = {
       { belief: "Leader", reality: "Alternative", dev: 39 },
       { belief: "Modern", reality: "Generic", dev: 20 },
     ],
-    indicatorLead: "Gap detected",
+    indicatorLead: "Perception gap",
     indicatorValue: "34",
     indicatorUnit: "pts",
-    indicatorSub: "Mean deviation · 5 attributes",
-  },
-  bridge: "Survey Surf bridges it",
-  footnote: {
-    id: "fn1",
-    text: "In this study, a 34-point gap separated how the brand saw itself from how the market actually felt.",
+    indicatorSub: "Average deviation across five measured attributes.",
   },
 };
 
 /* ============ THE BLIND SPOT — the Blind Spot Matrix™ ============ */
-export const blindSpotOpener: SectionOpener = {
-  folio: { left: "SS · ISSUE 01 · CHAPTER 02", right: "P. 04" },
-  kicker: "The Blind Spot",
-  kickerNo: "· 02",
-  heading: { lead: "There is a room you can’t see into." },
-  standfirst:
-    "Every market has already sorted what it knows about you into four rooms. You spend all day in three of them. The fourth — what the market can see and you can’t — is the only one that moves the business.",
-  marginNote: "everyone stares at the wrong three",
-};
 
-export const blindSpotFootnote = {
-  id: "fn2",
-  text: "Hover or focus any room to bring it into the light; the others fall back. Three read as apparatus — the blind spot stays lit, declassified into what the market actually said.",
+/**
+ * Chapter 02 is one spread and nothing else: the matrix, set large on the left,
+ * and the essay that explains it on the right.
+ *
+ * It carries NO publication chrome — no folio, no page number, no figure
+ * number, no classification, no revision, not even a kicker. Everything that
+ * used to label the chapter has been taken out, so the authority has to come
+ * from the hierarchy itself: one heading, one deck, three paragraphs, one link.
+ * That is why this is not a `SectionOpener` — there is no apparatus left for
+ * that shape to hold.
+ *
+ * The copy is written to a length. Three paragraphs is what it takes for the
+ * reading column to stand up to ~700px of matrix beside it; cutting one
+ * re-opens the hole at the foot of the column that this rewrite closed.
+ */
+export const blindSpotSpread = {
+  heading: { lead: "The Blind Spot" } as Heading,
+  deck: "Two questions sort every opinion a market forms of you: what you can see, and what it can see.",
+  body: [
+    "The answers make four rooms, and you already live in three of them. They confirm what you knew, settle what you feared, and sharpen the words you were going to use anyway — necessary work, and none of it decisive.",
+    "The fourth is the room you cannot walk into. It holds the conclusion your market reached months ago and has never said to your face: why a deal goes quiet after the second call, why your price reads as expensive rather than serious, why the word you chose lands as its opposite.",
+    "Sibero reads that room from the conversations already happening about you, and returns the verdict in your market’s own language — with the evidence behind it, and the one move that closes the distance.",
+  ],
+  cta: "See your blind spot",
 };
 
 /**
@@ -851,63 +895,6 @@ export const blindSpotPrimer = {
   handoff: "Fig. 01 — the matrix, declassified",
 };
 
-/** The ~38% argument column (the "brief") that sits beside the instrument. */
-export const johariFramework = {
-  kicker: "The Framework",
-  title: { lead: "The Survey Surf", em: "Blind Spot Matrix™" },
-  thesis:
-    "Two questions sort every opinion a market forms of you — what you can see, and what it can see. Four rooms. You live in three: they confirm, reassure, refine. None moves the decision.",
-  turn: "Only the fourth does.",
-  turnBody:
-    "The market has reached a verdict you can’t see from the inside — quietly setting your price, your pipeline, your position. That room is the blind spot. Finding it is the whole job.",
-  keyLabel: "Instrument key",
-  legend: [
-    { mark: "IGNORE", swatch: "ignore", text: "Confirmed by both — table stakes." },
-    { mark: "STUDY", swatch: "study", text: "Yours to say — unheard by the market." },
-    { mark: "UNKNOWN", swatch: "unknown", text: "Emerging — too early to bet." },
-    { mark: "CRITICAL", swatch: "critical", text: "The market’s verdict, unseen by you." },
-  ],
-  deliverableLabel: "What comes back",
-  deliverable: [
-    "The blind spot, named",
-    "A confidence score & the evidence",
-    "The messaging move",
-  ],
-  signalsLabel: "Signals coded",
-  signals: [
-    "emotional mismatch",
-    "perception drift",
-    "recurring objections",
-    "positioning gaps",
-    "trust asymmetry",
-    "language patterns",
-  ],
-  sourcesLabel: "Sources coded",
-  sourcesCount: "10",
-  sourcesSub: "1,240 conversations",
-  sources: [
-    "Reddit",
-    "G2 · Capterra",
-    "Sales calls",
-    "Churn exits",
-    "Support",
-    "Community",
-    "Social",
-    "App reviews",
-    "Web",
-    "Win / loss",
-  ],
-  meta: {
-    method: "SS/PMF-04",
-    rev: "REV 4",
-    sources: "10 SOURCES",
-    sample: "n = 1,240",
-    conf: "CONF 91%",
-    filed: "FILED 07 JUL",
-    reviewer: "SK",
-  },
-};
-
 export const johariAxes = {
   xCaption: "What you can see",
   xLeft: "Known to you",
@@ -917,158 +904,151 @@ export const johariAxes = {
   yBottom: "Unknown to market",
 };
 
-export const johariFigHead = {
-  title: "The Survey Surf Blind Spot Matrix™",
-  ref: "FIG. 01",
-  right: "SS/PMF-04 · REV 4",
-};
-
-/** The three "apparatus" rooms. The fourth — the blind spot — is `johariBlind`. */
+/**
+ * The three "apparatus" rooms. The fourth — the blind spot — is `johariBlind`.
+ *
+ * Each room holds four things and no more: its triage word, its name, one line
+ * of explanation, one verbatim, and the axis coordinate that places it. The
+ * file references, source chips and sentiment read-outs that used to sit at the
+ * foot of every room are gone — they were dashboard furniture, and the room
+ * needs the whitespace more than it needed the numbers.
+ */
 export const johariQuads: JohariQuad[] = [
   {
     id: "quad-consensus",
     pos: "tl",
-    ref: "SS-01",
     priority: "IGNORE",
     swatch: "ignore",
     coord: "YOU KNOW · THEY KNOW",
     name: "Consensus",
     tag: "the obvious",
     body: "What you both already agree on. Necessary — never decisive.",
-    evidence: ["G2", "Web", "Deck"],
-    confidence: 96,
-    confidenceLabel: "HIGH",
-    signalCount: "EV 427",
-    sentiment: [{ label: "AGREE", value: "92%", dir: "up" }],
     quote: { text: "It does what it says.", source: "G2 · R-0412" },
     note: "everyone claims this",
   },
   {
     id: "quad-latent",
     pos: "bl",
-    ref: "SS-02",
     priority: "STUDY",
     swatch: "study",
     coord: "YOU KNOW · THEY DON’T",
     name: "Latent Message",
     tag: "the untold",
     body: "Real value you hold — the market simply hasn’t heard it yet.",
-    evidence: ["Sales", "Demo"],
-    confidence: 58,
-    confidenceLabel: "MED",
-    signalCount: "OPP 74",
-    sentiment: [{ label: "AWARE", value: "11%", dir: "down" }],
     quote: { text: "Wait — you do that?", source: "Sales call · L-208" },
     note: "say it louder",
   },
   {
     id: "quad-research",
     pos: "br",
-    ref: "SS-03",
     priority: "UNKNOWN",
     swatch: "unknown",
     coord: "NEITHER KNOWS · YET",
     name: "Research Req.",
     tag: "the emerging",
     body: "A signal nobody has named yet — the question after this one.",
-    evidence: ["Unprompted"],
-    confidence: 34,
-    confidenceLabel: "LOW",
-    signalCount: "EV 12",
-    sentiment: [{ label: "SIGNAL", value: "↗", dir: "up" }],
     quote: { text: "I wonder if it could also…", source: "Unprompted · C-337" },
     note: "watch next qtr",
   },
 ];
 
-/** The fourth room — the dominant dark case file (top-right of the grid). */
+/**
+ * The fourth room — the dark, dominant case file (top-right of the grid).
+ *
+ * It argues in three beats and stops: what you assume, what they decided, what
+ * it costs you — then the verbatim that proves it and a single confidence
+ * reading. The classification tape, the redaction bars, the TRUST / BELONGING /
+ * RISK tiles, the summary verdict and the source strip have all been removed:
+ * the dialogue already says what they said, and saying it twice made the room
+ * read as a report card rather than a finding.
+ */
 export const johariBlind: JohariBlind = {
-  tape: "CONFIDENTIAL",
-  ref: "DOSSIER SS-04",
   priority: "◉ PRIORITY 01",
   coord: "YOU DON’T · THEY DO",
   name: "The Blind Spot",
   tag: "the verdict",
-  redactLead: "SUBJECT",
-  redactMid: "PERCEPTION GAP",
   dialogue: [
     { dt: "You assume", dd: "“We’re the scrappy underdog’s tool.”" },
-    { dt: "They’ve decided", dd: "“Built for teams bigger than mine — not for me.”" },
+    { dt: "They’ve decided", dd: "“Built for teams bigger than mine.”" },
     {
       dt: "Consequence",
-      dd: "Priced, pitched and filtered as the incumbent you set out to unseat.",
+      dd: "Priced and filtered as the incumbent you set out to unseat.",
     },
   ],
-  quote: { text: "Not for someone like me.", source: "Reddit · unprompted · ×37" },
+  quote: {
+    text: "Not for someone like me.",
+    source: "Reddit · unprompted · ×37",
+  },
   confidence: 91,
   confidenceLabel: "Signal confidence",
-  pattern: [
-    { label: "TRUST", value: "+12", dir: "up" },
-    { label: "BELONGING", value: "−38", dir: "down" },
-    { label: "RISK", value: "88", dir: "flat" },
-  ],
-  evidenceStack: ["Reddit", "G2", "Sales", "Churn"],
-  verdict: {
-    lead: "You built",
-    em1: "the underdog’s tool.",
-    mid: "They feel",
-    em2: "the incumbent’s.",
-  },
-  source: "Reddit · G2 · Sales · Churn — n = 1,240 · CONF HIGH · UPD 2D",
-  note: "trusted, not wanted",
 };
 
-export const johariCaption = {
-  strong: "FIG. 01 · CLASSIFICATION CONFIDENTIAL",
-  rest: " — Method SS/PMF-04 · 10 sources · 1,240 conversations · confidence 91% — filed 07 JUL · reviewed ✓ SK",
+/* ============ METHOD — THE PERCEPTION ENGINE ============
+   No folio, no page number, no chapter numeral: this chapter introduces itself
+   with a label and a headline and nothing else, so it is not a `SectionOpener`
+   — there is no publication chrome left for that shape to carry. */
+export const methodOpener: { kicker: string; heading: Heading } = {
+  kicker: "The Intelligence Engine",
+  heading: { lead: "Thousands of data points.", em: "One actionable insight." },
 };
 
-/* ============ METHOD — THE PERCEPTION ENGINE ============ */
-export const methodOpener: SectionOpener = {
-  folio: { left: "SS · ISSUE 01 · CHAPTER 03", right: "P. 05" },
-  kicker: "How It Works",
-  kickerNo: "· 03",
-  heading: { lead: "From ten thousand opinions,", em: "one perception." },
-  standfirst:
-    "One continuous engine. Scattered opinion enters at one end; a single, defensible read on how the market actually feels comes out the other. Scroll, and watch the machine run.",
-  marginNote: "opinion → perception",
+/**
+ * The chapter's introduction — it belongs to the whole section, not to the
+ * scrolling blocks. It sits centred above the three-column experience: the
+ * reader is introduced to the engine once, then watches it run. `cue` is the
+ * instruction that hands the reader over to the scroll.
+ */
+export const methodIntro = {
+  lead: "One continuous intelligence engine.",
+  body: "Scattered customer signals enter at one end. Sibero continuously groups, interprets and synthesizes them into a single defensible understanding of how the market truly feels.",
+  cue: "Scroll to watch the engine work.",
 };
 
 /**
  * The five stages of the engine, told as scrollytelling. As each block reaches
  * the viewport centre it drives the sticky field to a matching state:
  * scattered opinion → an ordered field → themes → a few forces → one point.
+ *
+ * `rail` names the same five stages as the engine's own pipeline, for the live
+ * stage marker: signals → intake → patterns → synthesis → verdict. Each name
+ * must describe what the instrument is doing in that state — the marker, the
+ * figure and the block are always reading the same stage.
  */
 export const methodStages: MethodStage[] = [
   {
     no: "01",
     label: "The raw voice",
+    rail: "Signals",
     heading: "Ten thousand opinions, no shape.",
     body: "Reviews, Reddit, tickets, sales calls, churn notes — your market is already talking, everywhere at once. On its own it is noise: scattered, contradictory, impossible to read.",
   },
   {
     no: "02",
     label: "Intake",
+    rail: "Intake",
     heading: "Every source, lined up on one page.",
     body: "No new survey to run. We pull each opinion in and normalise it into a single comparable field — every voice measured the same way, ready to be read.",
   },
   {
     no: "03",
     label: "Patterns",
+    rail: "Patterns",
     heading: "The same feeling, said a hundred ways.",
     body: "Read closely and structure appears. Repeated emotion pulls together into themes — the frustrations, desires and doubts your customers keep circling back to.",
   },
   {
     no: "04",
     label: "Synthesis",
+    rail: "Synthesis",
     heading: "Themes collapse into the few that matter.",
     body: "Overlapping patterns merge. Dozens of small signals consolidate into a handful of defensible forces — the ones actually shaping how the market feels.",
   },
   {
     no: "05",
     label: "The blind spot",
-    heading: "One perception you couldn't see.",
-    body: "Everything resolves to a single point: the one read on your market that was hidden in the noise. Not another report — the lever you move positioning and messaging around.",
+    rail: "Verdict",
+    heading: "The Actionable Insight",
+    body: "Everything resolves to a single point: the one read about the market, hidden in the noise. Sibero connects fragmented signals into a single market insight, giving you the clarity to build, position, and grow with confidence.",
   },
 ];
 
@@ -1085,7 +1065,7 @@ export const engineFlow: EngineFlowNode[] = [
 
 export const engineLegend = {
   label: "The perception engine",
-  ref: "SS-ENGINE · v3.1",
+  ref: "SB-ENGINE · v3.1",
   status: "Live · reading now",
 };
 
@@ -1126,18 +1106,42 @@ export const intakeSources: IntakeSource[] = [
 
 /** Verbatim opinions streaming through the intake ledger. */
 export const intakeSamples: IntakeSample[] = [
-  { code: "RVW", quote: "does what it says — never sure it’s for me", id: "EV-4471" },
-  { code: "RDT", quote: "everyone recommends it, nobody explains why", id: "EV-4472" },
+  {
+    code: "RVW",
+    quote: "does what it says — never sure it’s for me",
+    id: "EV-4471",
+  },
+  {
+    code: "RDT",
+    quote: "everyone recommends it, nobody explains why",
+    id: "EV-4472",
+  },
   { code: "TKT", quote: "took three tries to find the setting", id: "EV-4473" },
   { code: "CAL", quote: "we went with the one we understood", id: "EV-4474" },
-  { code: "DSC", quote: "feels like it’s built for bigger teams", id: "EV-4475" },
+  {
+    code: "DSC",
+    quote: "feels like it’s built for bigger teams",
+    id: "EV-4475",
+  },
   { code: "APP", quote: "premium, trusted — just not exciting", id: "EV-4476" },
   { code: "TWT", quote: "had no idea it did that", id: "EV-4477" },
   { code: "LNK", quote: "the safe choice, honestly", id: "EV-4478" },
-  { code: "FRM", quote: "couldn’t tell what it was for at first", id: "EV-4479" },
-  { code: "INT", quote: "I trust it — I’m just not excited by it", id: "EV-4480" },
+  {
+    code: "FRM",
+    quote: "couldn’t tell what it was for at first",
+    id: "EV-4479",
+  },
+  {
+    code: "INT",
+    quote: "I trust it — I’m just not excited by it",
+    id: "EV-4480",
+  },
   { code: "SVY", quote: "not for someone like me", id: "EV-4481" },
-  { code: "CMU", quote: "wish they’d just say what they’re best at", id: "EV-4482" },
+  {
+    code: "CMU",
+    quote: "wish they’d just say what they’re best at",
+    id: "EV-4482",
+  },
 ];
 
 /* ---- STAGE 02 · SYNTHESIZE ---- */
@@ -1172,7 +1176,7 @@ export const synthReadout = {
   noiseLabel: "12,904 signals · unsorted",
   convergeLabel: "1 perception · the blind spot",
   blindSpot: "Trusted, not wanted",
-  method: "METHOD · SS-SYNTH · emotion-weighted clustering",
+  method: "METHOD · SB-SYNTH · emotion-weighted clustering",
 };
 
 /* ---- STAGE 03 · ACTIVATE ---- */
@@ -1198,50 +1202,50 @@ export const activateStage: EngineStage = {
 export const deliverables: Deliverable[] = [
   {
     title: "Positioning document",
-    ref: "SS-POS",
+    ref: "SB-POS",
     version: "v1.2",
     note: "Own “trusted”, take back “wanted”.",
     primary: true,
   },
   {
     title: "Messaging framework",
-    ref: "SS-MSG",
+    ref: "SB-MSG",
     version: "v1.0",
     note: "Lead with desire, not features.",
   },
   {
     title: "Research report",
-    ref: "SS-RPT",
+    ref: "SB-RPT",
     version: "v2.1",
     note: "12,904 signals, fully sourced.",
   },
   {
     title: "Competitive comparison",
-    ref: "SS-CMP",
+    ref: "SB-CMP",
     version: "v1.1",
     note: "Where rivals out-feel you.",
   },
   {
     title: "Executive summary",
-    ref: "SS-EXE",
+    ref: "SB-EXE",
     version: "v1.0",
     note: "The blind spot, in one page.",
   },
   {
     title: "Campaign strategy",
-    ref: "SS-CAM",
+    ref: "SB-CAM",
     version: "v1.0",
     note: "Move the feeling, not the facts.",
   },
   {
     title: "Presentation deck",
-    ref: "SS-DCK",
+    ref: "SB-DCK",
     version: "v1.3",
     note: "The story, board-ready.",
   },
   {
     title: "Brand recommendation",
-    ref: "SS-BRD",
+    ref: "SB-BRD",
     version: "v1.0",
     note: "How to sound like the choice.",
   },
@@ -1250,49 +1254,71 @@ export const deliverables: Deliverable[] = [
 /** Stage 03 — the business surfaces one perception moves. Each radiates from
  *  the perception core in the engine figure. One insight; many outcomes. */
 export const engineOutcomes: EngineOutcome[] = [
-  { label: "Positioning", ref: "SS-POS", primary: true },
-  { label: "Messaging", ref: "SS-MSG" },
-  { label: "Campaign", ref: "SS-CAM" },
-  { label: "Landing page", ref: "SS-LND" },
-  { label: "Website", ref: "SS-WEB" },
-  { label: "Sales", ref: "SS-SAL" },
-  { label: "Pricing", ref: "SS-PRC" },
-  { label: "Product", ref: "SS-PRD" },
-  { label: "Experience", ref: "SS-CX" },
+  { label: "Positioning", ref: "SB-POS", primary: true },
+  { label: "Messaging", ref: "SB-MSG" },
+  { label: "Campaign", ref: "SB-CAM" },
+  { label: "Landing page", ref: "SB-LND" },
+  { label: "Website", ref: "SB-WEB" },
+  { label: "Sales", ref: "SB-SAL" },
+  { label: "Pricing", ref: "SB-PRC" },
+  { label: "Product", ref: "SB-PRD" },
+  { label: "Experience", ref: "SB-CX" },
 ];
 
 /** The engine's identity apparatus — printed on the figure header and footer,
  *  and on the reduced-motion still. */
 export const engineMeta: EngineMeta = {
   figLeft: "FIG. 03 · THE PERCEPTION ENGINE",
-  figRight: "SS-ENGINE · v3.1",
+  figRight: "SB-ENGINE · v3.1",
   status: "Reading",
   scrollHint: "Scroll to run the engine",
-  method: "METHOD · SS/PMF-04 · emotion-weighted synthesis",
+  method: "METHOD · SB/PMF-04 · emotion-weighted synthesis",
   staticCaption: {
     strong: "FIG. 03 · THE PERCEPTION ENGINE",
     rest: " — scattered opinion in, one defensible perception out, branched into the decisions it moves. Enable motion to run the engine.",
   },
 };
 
-/* ============ TRANSCRIPT ============ */
-export const transcript = {
-  folio: {
-    left: "From the Transcript · SS-0442-17",
-    right: "Verbatim · Logged 06 Jul 2026",
+/* ============ THE TURN — the issue's emotional midpoint ============
+   Two sentences set as one block of two near-equal lines — 38 characters and
+   35, so the balance is in the copy rather than in the CSS. The first is the
+   premise everyone assumes; the second overturns it, and its last word is
+   where the whole argument lands, so it is the only word in the section that
+   takes colour. Nothing is attributed, because nobody said it. */
+export const statement: Statement = {
+  lineOne: "They didn’t choose the better product.",
+  lineTwo: {
+    lead: "They chose the one they",
+    accent: "understood.",
   },
-  quoteLead:
-    "“They kept telling me it was the premium one. Honestly? I just thought it was the one I could never figure out — so I went with ",
-  penText: "the boring option I understood",
-  quoteTail: ".”",
-  attribution: "Verified respondent · 31 · evaluated, did not buy",
+};
+
+/* ============ METHOD INVITE — the bridge to the methodology page ============
+   Closes the homepage: the value proposition is made, so the deep methodology
+   moves to its own page. This premium transition block invites the interested
+   reader onward without lengthening the front page. */
+export const methodInvite = {
+  eyebrow: "Interested in how we reach our conclusions?",
+  statement: "We don’t rely on surveys.",
+  lede: "We analyze thousands of real customer data points, uncover hidden market patterns, and surface the perception that drives growth.",
+  cta: { label: "Explore the Sibero Method", href: "/method" },
+};
+
+/* ============ THE INVITATION — the turn of the page ============
+   The line that closes the front page and opens the second half, and the same
+   line again at the foot of the file to close it. The label itself is
+   `dossierCta` in constants, because the two bands say the same thing in the
+   same words; all that lives here is the accessible name for each band. Neither
+   carries a chapter marker or any metadata — one line, nothing else. */
+export const dossierInvite = {
+  label: "Continued",
+  footLabel: "End of the file",
 };
 
 /* ============ MULTIPLIER ============ */
 export const multiplierOpener: SectionOpener = {
-  folio: { left: "SS · ISSUE 01 · CHAPTER 04", right: "P. 07" },
+  folio: { left: "SB · ISSUE 01 · CHAPTER 04", right: "P. 07" },
   kicker: "The Multiplier",
-  kickerNo: "· 04",
   heading: {
     lead: "Perception only means something next to someone else.",
   },
@@ -1354,91 +1380,109 @@ export const relativeRead = {
   marginNote: "now it’s actionable",
 };
 
-export const multiplierCaption = {
-  strong: "FIG. 02",
-  rest: " — Emotional perception, read two ways.",
-};
-
-/* ============ SOURCES ============ */
+/* ============ SOURCES ============
+   One argument, told once: the market is already speaking, and every channel
+   it speaks through resolves to a single reading. The listening map carries
+   the argument; the list underneath only names the channels and why each one
+   earns its place. Neither repeats the other — the map never prints the source
+   names, the list never redraws the convergence. */
+/* The opener runs on the small label and its hairline alone — the headline is
+   the anchor. The chapter is still numbered in the folio, for the index. */
 export const sourcesOpener: SectionOpener = {
-  folio: { left: "SS · ISSUE 01 · CHAPTER 05", right: "P. 09" },
+  folio: { left: "SB · ISSUE 01 · CHAPTER 05", right: "P. 09" },
   kicker: "Always Listening",
-  kickerNo: "· 05",
   heading: {
-    lead: "Wherever your customers already speak, we’re already there.",
+    lead: "The market is already talking.",
   },
   standfirst:
-    "We don’t ask the market to fill in a form. We meet it where it’s most honest — then pull every channel toward one reading.",
-  dropcap: true,
+    "We don’t interrupt customers with another survey. Sibero listens where conversations already happen, combining structured feedback with real-world customer signals to build a complete picture of market perception.",
 };
 
-export const sources: LeaderItem[] = [
-  { num: "01", name: "Product reviews", tag: "Rated · Verbatim", arrow: true },
-  { num: "02", name: "Reddit", tag: "Candid · Threaded", arrow: true },
-  { num: "03", name: "Discord", tag: "Real-time · Community", arrow: true },
-  { num: "04", name: "Community forums", tag: "Niche · Deep", arrow: true },
+/** The intake, named once — enterprise channels and why each one matters. */
+export const sources: SignalSource[] = [
   {
-    num: "05",
-    name: "Support tickets",
-    tag: "Friction · First-hand",
-    arrow: true,
-  },
-  { num: "06", name: "Sales calls", tag: "Objections · Intent", arrow: true },
-  { num: "07", name: "Churn feedback", tag: "Why they left", arrow: true },
-  {
-    num: "08",
-    name: "Public social",
-    tag: "Unprompted · At scale",
-    arrow: true,
+    name: "Product Reviews",
+    note: "Public customer sentiment",
+    kind: "unprompted",
   },
   {
-    num: "09",
-    name: "App store reviews",
-    tag: "Sentiment · Coded",
-    arrow: true,
+    name: "Survey Responses",
+    note: "Structured quantitative feedback",
+    kind: "structured",
   },
   {
-    num: "10",
-    name: "Customer interviews",
-    tag: "Qualitative · 1:1",
-    arrow: true,
+    name: "Support Tickets",
+    note: "Recurring customer friction",
+    kind: "structured",
+  },
+  {
+    name: "Customer Interviews",
+    note: "Deep qualitative insights",
+    kind: "structured",
+  },
+  {
+    name: "Public Social",
+    note: "Unprompted market conversations",
+    kind: "unprompted",
+  },
+  {
+    name: "App Store Reviews",
+    note: "Feature sentiment & usability",
+    kind: "unprompted",
+  },
+  {
+    name: "Reddit",
+    note: "Honest community discussion",
+    kind: "unprompted",
+  },
+  {
+    name: "Win/Loss Interviews",
+    note: "Buying decision patterns",
+    kind: "structured",
+  },
+  {
+    name: "CRM Feedback",
+    note: "Sales objections & demand signals",
+    kind: "structured",
+  },
+  {
+    name: "Feature Requests",
+    note: "Emerging customer needs",
+    kind: "structured",
   },
 ];
 
-export const tickerLead = "→ Flowing to Survey Surf";
-export const tickerItems: string[] = [
-  "Product reviews",
-  "Reddit",
-  "Discord",
-  "Community forums",
-  "Support tickets",
-  "Sales calls",
-  "Churn feedback",
-  "Public social",
-  "App reviews",
-  "Customer interviews",
-];
+export const tickerLead = "→ Flowing to Sibero";
+/* Derived, so the flow band can never drift back to a retired channel. */
+export const tickerItems: string[] = sources.map((source) => source.name);
 
 /* ============ DOSSIER ============ */
+/* No folio, no chapter rule and no chapter numeral: the deliverable opens on
+   its own cover sheet — the classification band below — rather than on the page
+   furniture that made this spread read like a scanned page. */
 export const dossierOpener: SectionOpener = {
-  folio: {
-    left: "SS · ISSUE 01 · CHAPTER 06 · BOUND SUPPLEMENT",
-    right: "P. 11",
-  },
   kicker: "What You Receive",
-  kickerNo: "· 06",
   heading: { lead: "You don’t get a dashboard. You get a dossier." },
   standfirst:
     "Not a login and a pile of charts to interpret. A finished research file — read like a document, built to be read in the room where you decide.",
 };
 
+/* The cover-sheet band, read left to right as a classified file header:
+   classification · file · revision · subject · scope · confidence · fieldwork ·
+   sample · status. Ordered so the strip opens on the classification and closes
+   on the status at the right edge — one continuous band, not a cluster of
+   labels with dead space beside it. Nine cells is the count the full measure
+   holds on one line; adding a tenth pushes the band into a second row. */
 export const dossierDocCells = [
   { label: "Confidential", strong: true },
-  { label: "Perception File SS-0442", strong: true },
+  { label: "Perception File SB-0442", strong: true },
+  { label: "Rev 01" },
   { label: "D2C Brand" },
   { label: "10 Sources" },
-  { label: "CI 95% — Fieldwork 9 days" },
-  { label: "n=1,240" },
+  { label: "CI 95%" },
+  { label: "Fieldwork 9 days" },
+  { label: "n = 1,240" },
+  { label: "Board ready", strong: true },
 ];
 
 export const dossierTabs = [
@@ -1470,10 +1514,6 @@ export const dossierEmotionalMap = {
   ],
   indexTermsLabel: "Index terms",
   indexTerms: "“overwhelming” · “for experts” · “not for me” · “safe”",
-  caption: {
-    strong: "FIG. 03",
-    rest: " — Dominant emotions, coded from 10 sources.",
-  },
 };
 
 export const dossierCompetitive = {
@@ -1484,10 +1524,6 @@ export const dossierCompetitive = {
   read: {
     label: "How to read it",
     text: "You’re the most trusted, least wanted name in the set. Rival A is less trusted but far more desired — and winning. Trust is your asset; desire is your unlock.",
-  },
-  caption: {
-    strong: "FIG. 04",
-    rest: " — Competitive perception. Axes: Wanted ↑ / Trusted →.",
   },
 };
 
@@ -1502,7 +1538,6 @@ export const dossierMessaging = {
     quote: "“Made for people who thought this wasn’t for them.”",
     verdict: "Closes the belonging gap",
   },
-  caption: { strong: "FIG. 05", rest: " — The correction, drafted." },
   campaignsLabel: "Recommended campaigns",
   campaigns: [
     { num: "i", name: "“First-timers,”", arrow: true },
@@ -1513,9 +1548,8 @@ export const dossierMessaging = {
 
 /* ============ PHILOSOPHY ============ */
 export const philosophyOpener: SectionOpener = {
-  folio: { left: "SS · ISSUE 01 · CHAPTER 07 · CORRECTIONS", right: "P. 13" },
+  folio: { left: "SB · ISSUE 01 · CHAPTER 07 · CORRECTIONS", right: "P. 13" },
   kicker: "Our Stance",
-  kickerNo: "· 07",
   heading: { lead: "What we are — and what we refuse to be." },
 };
 
@@ -1537,21 +1571,22 @@ export const corrections: Correction[] = [
 /* ============ BACK COVER ============ */
 /* ============ COLOPHON — the closing page of the dossier ============ */
 export const colophon = {
-  folio: { left: "SS · ISSUE 01 · BACK COVER", right: "COLOPHON" },
+  folio: { left: "SB · ISSUE 01 · BACK COVER", right: "COLOPHON" },
   statement: ["The market has already decided.", "Now it’s your turn."],
-  lede: "Survey Surf is the perception company. We read the signals your customers already leave behind — across reviews, communities, tickets and calls — and return the one belief the market holds but has never said to your face.",
+  lede: "Sibero is the perception company. We read the signals your customers already leave behind — across reviews, communities, tickets and calls — and return the one belief the market holds but has never said to your face.",
   primaryCta: { label: "See your blind spot", href: "/contact" },
   secondaryCta: { label: "Book a discovery call", href: "/contact" },
   brand: {
-    wordmark: "SURVEY · SURF",
+    wordmark: "SIBERO",
     tagline: "The Perception Company.",
     line: "Helping companies discover what customers already believe.",
   },
   navLabel: "Navigation",
   contactLabel: "Contact",
   strip: {
-    left: "© 2026 Survey Surf",
+    left: "© 2026 Sibero",
     center: "Delhi, India",
-    right: "Built for companies that want to understand perception before scaling.",
+    right:
+      "Built for companies that want to understand perception before scaling.",
   },
 };

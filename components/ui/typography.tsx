@@ -6,19 +6,12 @@ import type { Heading as HeadingParts } from "@/types";
 /** Kicker — the small uppercase label above a heading. */
 export function Kicker({
   children,
-  no,
   className,
 }: {
   children: ReactNode;
-  no?: string;
   className?: string;
 }) {
-  return (
-    <p className={cn("kicker", className)}>
-      {children}
-      {no ? <span className="kick-no"> {no}</span> : null}
-    </p>
-  );
+  return <p className={cn("kicker", className)}>{children}</p>;
 }
 
 const headingClass = { h1: "h1", h2: "h2", h3: "h3" } as const;

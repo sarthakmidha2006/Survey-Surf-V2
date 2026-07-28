@@ -1,5 +1,5 @@
 /* ============================================================
-   SURVEY SURF — DESIGN SYSTEM
+   SIBERO — DESIGN SYSTEM
    "The magazine that investigates you."
    Theme: Editorial Ivory · One paper, three voices, the editor's red pen.
 
@@ -46,9 +46,9 @@
   --container-editorial: 1400px; /* wide editorial measure — confident, not floating */
 
   /* Breakpoints — mirror the reference's responsive stops */
-  --breakpoint-ss-sm: 680px;
-  --breakpoint-ss-md: 900px;
-  --breakpoint-ss-lg: 1120px;
+  --breakpoint-sb-sm: 680px;
+  --breakpoint-sb-md: 900px;
+  --breakpoint-sb-lg: 1120px;
 }
 
 /* ------------------------------------------------------------------
@@ -57,6 +57,9 @@
    ------------------------------------------------------------------ */
 :root {
   --paper: var(--color-paper);
+  /* a barely-there warm shift off the page — the "soft background change" that
+     lets a movement of intermediate sections read apart without a border */
+  --paper-soft: color-mix(in srgb, var(--color-plate) 52%, var(--color-paper));
   --plate: var(--color-plate);
   --ink: var(--color-ink);
   --ink-soft: var(--color-ink-soft);
@@ -74,7 +77,80 @@
   --margin-col: 240px; /* reserved outer margin column */
   --measure: 66ch; /* ideal reading measure */
   --pad-x: 72px; /* container gutter — generous, intentional (responsive below) */
-  --section-gap: 96px; /* rhythm between chapters — dense but breathing (responsive below) */
+
+  /* ---- THE CHAPTER BREAK ----
+     The whitespace between two editorial chapters, set in exactly one place.
+     A chapter carries NO closing padding, so this value *is* the break: it is
+     read as the lead-in above the next chapter's first mark, which is why
+     raising it moves the pacing of the whole issue at once and why nothing
+     inside a chapter is keyed to it.
+
+     Sized off the measure (vw), not the window (vh): a break in a printed
+     publication is a constant of the page, and a tall display should widen the
+     type's air, not turn the break into a blank screen. 120px at the desktop
+     floor, 180px at the ceiling — generous enough that one chapter is mentally
+     finished before the next begins. */
+  --chapter-gap: clamp(120px, 9.6vw, 180px);
+  /* A SEAM is a mark set in the whitespace between two chapters, not a chapter
+     of its own — so it is given a full break on each side and no more. Above it
+     the break stands whole; below it, this fraction plus the following
+     chapter's lead-in (0.58) sum back to one. Both sides therefore land on the
+     same figure as every other break on the page, and the page turn reads as
+     one beat rather than as two gaps the marker leans against. */
+  --chapter-gap-seam: calc(var(--chapter-gap) * 0.42);
+  /* A chapter that has to be read in ONE SCREEN owes the reader the same
+     lead-in, but it also has to fit the window it opens in — so its break is
+     additionally capped by the window's height, and never falls below the
+     desktop floor. 13vh is the largest share of a laptop window the break can
+     take and still leave the spread it opens inside that window. This is the
+     only place the break consults `vh`. */
+  --chapter-gap-fit: clamp(120px, min(9.6vw, 13vh), 180px);
+
+  /* Copper — the same accent family as the editor's red, one notch warmer and
+     calmer. Reserved for the conclusion: the cover signature and the verdict,
+     nowhere else. `--copper-l` is that metal lifted to read on a black field. */
+  --copper: #a8703c;
+  --copper-l: #cb9a6d;
+
+  /* The observation field — the near-black an instrument is watched inside.
+     Cooler and deeper than `--ink` (which is the warm black we PRINT with), so
+     a panel of it reads as a window cut into the page rather than a block of
+     ink laid on it. `--red-lift` is the editor's red raised to carry on that
+     field, the same correction the cover exhibit makes for its own dark stage. */
+  --chamber: #0b0b0d;
+  --red-lift: #c0563a;
+
+  /* THE COVER'S FIELD. The near-black the front page is printed on — warmer and
+     deeper than either `--ink` or `--chamber`. It lives here rather than in the
+     hero because the masthead has to sit on the *same* value: over the cover the
+     bar is not a bar laid on the page, it is the top of the page. One token, so
+     the two can never drift a shade apart and open a seam. */
+  --cover-black: #060504;
+
+  /* The masthead's height. It is sticky and opaque, so anything else that pins
+     itself to the top of the window has to start below this line or it simply
+     disappears behind the bar. Measured, and constant across breakpoints. */
+  --masthead-h: 70px;
+
+  /* ---- THE COVER, AND THE LIFT THAT OPENS IT ----
+     `--cover-h` is the window under the bar: the cover is printed to exactly
+     that height, so the front page owns the first screen and nothing of the
+     report shows beneath it. Every figure in the lift is measured from this one
+     value — the stage's height, how far the page is pulled back up under the
+     cover, and the throw — so the gesture can never come apart at a size we
+     did not test. See `.cover-lift` in sections.css for the choreography. */
+  --cover-h: calc(100svh - var(--masthead-h));
+  /* THE HELD MOMENT. The scroll the cover absorbs before anything moves — the
+     hand on the cover before it is lifted. The one figure here that is not
+     derived: it is a duration, not a distance, and it has to stay short enough
+     that a reader never reads it as a dead page. */
+  --cover-hold: 16vh;
+  /* THE THROW. How far the cover travels while the page rises the full window
+     beneath it. Under 0.5 by necessity, not by taste: the page arrives at
+     scroll speed, so anything at or above 1 would outrun it and open a gap
+     between the two layers. At 0.44 the cover is always retreating and always
+     still covered — which is what reads as a lift rather than a scroll. */
+  --cover-throw: calc(var(--cover-h) * 0.44);
 
   /* Alpha variants — derived from the base inks so brand color lives in
      exactly one place. Used for washes, hairlines, shadows and overlays. */
@@ -94,6 +170,11 @@
      Slow and understated by intent — never springy, never flashy. */
   --ease-draw: cubic-bezier(0.4, 0, 0.3, 1);
   --ease-settle: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* `fold` is the one SYMMETRIC curve: it eases out of rest and back into rest
+     at the same rate, because the motion it carries — the dossier unfolding and
+     filing away again — is the same gesture run forwards and backwards. A curve
+     that lands softly in one direction would snap in the other. */
+  --ease-fold: cubic-bezier(0.42, 0, 0.58, 1);
   --dur-quick: 0.42s;
   --dur-base: 0.6s;
   --dur-slow: 0.9s;
@@ -116,13 +197,18 @@
 @media (max-width: 900px) {
   :root {
     --pad-x: 40px; /* tablet */
-    --section-gap: 88px;
+    /* The break steps down with the page, but keeps its proportion: a tablet
+       screen is shorter, so 120px of it would read as the blank page the
+       desktop value is generous enough to avoid. */
+    --chapter-gap: 104px;
+    --chapter-gap-fit: 104px;
   }
 }
 @media (max-width: 680px) {
   :root {
     --pad-x: 24px; /* mobile */
-    --section-gap: 72px;
+    --chapter-gap: 88px;
+    --chapter-gap-fit: 88px;
   }
 }
 
@@ -187,7 +273,7 @@
    ------------------------------------------------------------------ */
 @layer components {
   /* ---- Skip link ---- */
-  .ss-skip {
+  .sb-skip {
     position: absolute;
     left: -9999px;
     top: 0;
@@ -200,7 +286,7 @@
     text-transform: uppercase;
     padding: 12px 20px;
   }
-  .ss-skip:focus {
+  .sb-skip:focus {
     left: 12px;
     top: 12px;
   }
@@ -242,8 +328,11 @@
     font-weight: 440;
     line-height: 1.02;
   }
+  /* The chapter title. Set a register above an ordinary heading — this is a
+     chapter OPENER, and it has to announce a new chapter of the issue on its
+     own, without leaning on the folio and the rule above it. */
   .h2 {
-    font-size: clamp(34px, 4vw, 52px);
+    font-size: clamp(42px, 5vw, 65px);
   }
   .h3 {
     font-size: clamp(24px, 2.4vw, 31px);
@@ -297,9 +386,6 @@
   .kicker {
     color: var(--ink);
     margin-bottom: calc(var(--u) * 3);
-  }
-  .kicker .kick-no {
-    color: var(--ink-soft);
   }
 
   /* ---- Folio — the chapter line ---- */
@@ -435,7 +521,6 @@
     font-size: 10px;
     letter-spacing: 0.16em;
   }
-
   /* ---- Link-pen — red-underline reading link ---- */
   .link-pen {
     text-decoration: none;
@@ -492,7 +577,7 @@
 
   /* page-turn settle for tab panels */
   .turn-in {
-    animation: ss-turn 0.4s ease both;
+    animation: sb-turn 0.4s ease both;
   }
 
   /* ---- Leader rows (dot leaders) ---- */
@@ -561,75 +646,6 @@
   .table-print tr:last-child td {
     border-bottom: none;
   }
-
-  /* ---- Footnotes ---- */
-  .fn-mark {
-    text-decoration: none;
-    color: var(--red);
-    position: relative;
-  }
-  .fn-mark sup {
-    font-family: var(--app);
-    font-weight: 500;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-  }
-  .fn-mark::after {
-    content: attr(data-note);
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 10px);
-    transform: translateX(-50%) translateY(4px);
-    width: min(300px, 74vw);
-    background: var(--paper);
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    box-shadow: 3px 3px 0 var(--ink-a12);
-    padding: 12px 15px;
-    font-family: var(--text);
-    font-size: 13.5px;
-    line-height: 1.55;
-    letter-spacing: 0;
-    text-transform: none;
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 0.25s ease,
-      transform 0.25s ease;
-    z-index: 40;
-  }
-  .fn-mark:hover::after,
-  .fn-mark:focus-visible::after {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-  .footnotes {
-    margin-top: calc(var(--u) * 7);
-    max-width: var(--measure);
-  }
-  .footnotes::before {
-    content: "";
-    display: block;
-    width: 176px;
-    border-top: 1px solid var(--ink);
-    margin-bottom: calc(var(--u) * 1.5);
-  }
-  .footnotes li {
-    list-style: none;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--ink-faint);
-  }
-  .footnotes li + li {
-    margin-top: 6px;
-  }
-  .footnotes .fno {
-    color: var(--red);
-    font-size: 11px;
-    vertical-align: super;
-    margin-right: 6px;
-  }
 }
 
 /* ------------------------------------------------------------------
@@ -639,16 +655,40 @@
    so a failed or absent JS runtime never leaves content hidden.
    ------------------------------------------------------------------ */
 @layer components {
+  /* The base entrance — matter arriving on the page. Slightly further and
+     slower than a UI fade, on the settle curve rather than `ease`, so it reads
+     as something coming to rest rather than something switching on. */
   .js .reveal {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(18px);
     transition:
-      opacity 0.6s ease,
-      transform 0.6s ease;
+      opacity 0.78s var(--ease-settle),
+      transform 0.78s var(--ease-settle);
   }
   .js .reveal.is-in {
     opacity: 1;
     transform: none;
+  }
+
+  /* ---- The chapter entrance — how a new chapter comes into the viewport ----
+     The same gesture as the base reveal, given the length a chapter opening
+     deserves: further to travel, and a full second to travel it, so the heading
+     settles as the reader arrives at it instead of being there already. The
+     observer that starts it waits until the mark is well inside the window (see
+     CHAPTER_ENTRY in ui/reveal.tsx) — the late trigger and the long settle
+     together are what make a chapter *enter* rather than cut in. Nothing is
+     pinned and nothing tracks the scroll position: it is one slow landing, and
+     scrolling on never fights it. Applied by <Reveal chapter> — chapter
+     openers, the two spreads that open without one, and the seams. */
+  .js .reveal--chapter {
+    transform: translateY(34px);
+    transition-duration: 1.05s;
+  }
+  /* the lede follows the headline in by a beat, so the spread lands as two
+     marks rather than one block (the feature opener reveals its columns
+     separately for exactly this reason) */
+  .js .opener--feature .opener-feature-lede {
+    transition-delay: 0.16s;
   }
 
   /* Sequenced inking for dot-leader lists */
@@ -735,32 +775,28 @@
   }
 
   /* ---- Index rows: a quiet tint + the arrow leans in on hover.
-     Scoped to the reading indexes (sources / campaigns) so the locked
-     johari lists stay untouched. ---- */
+     Scoped to the campaigns index so the locked johari lists stay
+     untouched. (The sources chapter no longer runs a leader index.) ---- */
   .leader-arrow {
     display: inline-block;
   }
   @media (hover: hover) {
-    .sources-index .leader-row,
     .campaigns .leader-row {
       transition: background-color var(--dur-quick) ease;
     }
-    .sources-index .leader-row:hover,
     .campaigns .leader-row:hover {
       background: var(--ink-a05);
     }
-    .sources-index .leader-arrow,
     .campaigns .leader-arrow {
       transition: transform var(--dur-base) var(--ease-settle);
     }
-    .sources-index .leader-row:hover .leader-arrow,
     .campaigns .leader-row:hover .leader-arrow {
       transform: translateX(4px);
     }
   }
 }
 
-@keyframes ss-turn {
+@keyframes sb-turn {
   from {
     opacity: 0;
     transform: translateY(4px);
@@ -771,7 +807,7 @@
   }
 }
 
-@keyframes ss-drift {
+@keyframes sb-drift {
   from {
     transform: translateX(0);
   }

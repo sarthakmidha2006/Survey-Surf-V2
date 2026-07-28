@@ -12,7 +12,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "See your blind spot",
   description:
-    "Tell us who you are and who you’re up against. We’ll hand you the one thing the market believes but has never said to your face — and how to change it.",
+    "Share your website or product, and Sibero will analyze thousands of conversations to uncover how your market truly perceives you.",
   path: "/contact",
 });
 
@@ -26,19 +26,19 @@ export default function ContactPage() {
             <Marginalia>we read every one — by a person, not a bot.</Marginalia>
           }
         >
-          <Folio left="SS · ISSUE 01 · ENQUIRY" right="RSVP" />
+          <Folio left="SB · ISSUE 01 · ENQUIRY" right="RSVP" />
           <Rule />
           <Kicker>See Your Blind Spot</Kicker>
           <Heading
             as="h1"
             parts={{
-              lead: "Tell us who you are —",
-              em: "and who you’re up against.",
+              lead: "Tell us about",
+              em: "your business.",
             }}
           />
           <Standfirst colRead>
-            We’ll hand you the one thing the market believes but has never said
-            to your face — and how to change it.
+            Share your website or product, and Sibero will analyze thousands of
+            conversations to uncover how your market truly perceives you.
           </Standfirst>
 
           <ContactForm />

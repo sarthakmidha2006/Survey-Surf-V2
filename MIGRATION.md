@@ -87,7 +87,7 @@ that actually exist in this design:
 | Badge / Research Chip  | the apparatus label / `leader-tag` on `LeaderRow`    |
 | Proof Card / Statistic | `ProofStat` (`components/ui/stat.tsx`)               |
 | Evidence Card          | the Johari `file` panels + `Plate`                   |
-| Quote                  | `.gap-quote`, `.pullq`, `TranscriptSpread`           |
+| Quote                  | `.gap-quote`, `.pullq`, `StatementSpread`            |
 | CTA                    | `Slip` + `BackCoverCta`                              |
 | Section Header         | `SectionHeader` (`components/ui/section-header.tsx`) |
 | Divider                | `Rule` (`components/ui/rule.tsx`)                    |

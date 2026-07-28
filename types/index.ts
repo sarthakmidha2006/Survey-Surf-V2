@@ -28,9 +28,11 @@ export interface CtaLink {
 
 /* ---------- Section: header / opener ---------- */
 export interface SectionOpener {
-  folio: Folio;
-  kicker: string;
-  kickerNo?: string;
+  /** The chapter line. Omitted by openers that carry no page furniture. */
+  folio?: Folio;
+  /** The running label above the headline. Omitted by openers that open on the
+   *  headline alone, with nothing standing above it. */
+  kicker?: string;
   heading: Heading;
   standfirst?: string;
   dropcap?: boolean;
@@ -41,17 +43,15 @@ export interface SectionOpener {
    The connective tissue in the whitespace where one chapter ends and the next
    begins: a centered issue marker on a hairline, a line that concludes the
    chapter just read, and a forward teaser that is a real jump-link into the
-   next chapter (its running head, small-caps). Never restates the next
-   headline — it sets it up, so the reading stays continuous. */
+   next chapter. It carries no chapter number or running head, and never
+   restates the next headline — it sets it up, so the reading stays continuous. */
 export interface ChapterSeam {
-  /** Centered marker sitting on the hairline, e.g. "SS · ISSUE 01". */
+  /** Centered marker sitting on the hairline, e.g. "SB · ISSUE 01". */
   issue: string;
   /** A closing line that concludes the chapter just read. */
   leadOut: string;
   /** The forward pull into the next chapter — a hook, not the next headline. */
   teaser: string;
-  /** The next chapter's running head, e.g. "Chapter 02 · The Blind Spot". */
-  next: string;
   /** Anchor href of the next chapter, for the jump link (e.g. "#blindspot"). */
   nextHref: string;
 }
@@ -64,11 +64,30 @@ export interface HeroMetric {
   caption: string;
 }
 
+/** The cover headline, set as three clauses so each holds its own line and the
+ *  editorial emphasis is carried by the content, not by markup in the section.
+ *  Line 1 reads `open` + `strong` + `warm`; line 2 is `claim`; line 3 is
+ *  `signOff` + `brand`. */
+export interface HeroHeading {
+  /** Line 1, plain — e.g. "Listen". */
+  open: string;
+  /** Line 1, the one word that takes the extra weight — e.g. "Beyond". */
+  strong: string;
+  /** Line 1, the rest of the warmed phrase — e.g. "the Noise.". */
+  warm: string;
+  /** Line 2 — the claim. Sized to hold one line; never wraps on desktop. */
+  claim: string;
+  /** Line 3, plain — e.g. "with". */
+  signOff: string;
+  /** Line 3, the signature: carries the pen mark and the copper accent. */
+  brand: string;
+}
+
 export interface HeroContent {
   /** The eyebrow — e.g. "CASE FILE 001". */
   caseFile: string;
-  /** Split headline; `em` carries the red pen underline. */
-  heading: Heading;
+  /** Three-clause headline; `brand` carries the pen underline. */
+  heading: HeroHeading;
   standfirst: string;
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
@@ -127,31 +146,64 @@ export interface HeroSceneContent {
 }
 
 /* ---------- Conversation stream (FIG. A — the cover exhibit) ----------
-   The redesigned cover visualization: ~50 scattered customer opinions drift
-   on the left, emit thin converging streams of light, and resolve — on the
-   far right — into one fixed perception card. All copy lives here; the
-   flow geometry and particle field are generated in the figure itself. */
+   The cover visualization: thousands of scattered customer opinions drift on
+   the left — a readable foreground of headline opinions over a far deeper,
+   blurred murmur — each emitting thin converging streams of light that resolve,
+   on the far right, into one fixed market verdict. All copy lives here; the flow
+   geometry and particle field are generated in the figure itself. */
 
-/** A single measured stat printed at the foot of the perception card. */
-export interface PerceptionStat {
-  value: string;
+/** One measured reading: a small label over a large figure. */
+export interface PerceptionReading {
   label: string;
+  value: string;
+  /** Unit trailing the figure in a smaller face — "2.3M" + "signals". */
+  unit?: string;
+  /** Qualitative readings ("Very High") are set in the app face, not as figures. */
+  qualitative?: boolean;
 }
 
-/** The one fixed insight everything flows into. */
+/** A titled prose section of the report — a small-caps label over one statement. */
+export interface PerceptionSection {
+  label: string;
+  body: string;
+}
+
+/** The report's conclusion: a label, and the call itself. */
+export interface PerceptionVerdict {
+  label: string;
+  value: string;
+}
+
+/**
+ * The deliverable, modelled as what it is: the first page of a confidential
+ * market-intelligence report. A masthead, a one-sentence executive summary, four
+ * measured readings, the primary insight, the recommended action, and the call —
+ * listed in the order they are generated when the output beam reaches the report.
+ *
+ * Nothing here implies software: no panels, no tiles, no chrome. The figure sets
+ * it with horizontal rules and whitespace only.
+ */
 export interface PerceptionCard {
-  /** Small eyebrow above the verdict, e.g. "The Market's Perception". */
-  eyebrow: string;
-  /** The verbatim perception the market holds — the emotional payload. */
-  quote: string;
-  /** The two ledger figures beneath the verdict. */
-  stats: PerceptionStat[];
+  /** The masthead, e.g. "Market Verdict". Set in caps, one word to a line. */
+  title: string;
+  /** The one-sentence executive summary, set as a standfirst under the masthead. */
+  standfirst: string;
+  /** The four readings: confidence, volume analysed, sources, signal strength. */
+  readings: PerceptionReading[];
+  /** The single most consequential thing the analysis found. */
+  insight: PerceptionSection;
+  /** What to do about it. */
+  action: PerceptionSection;
+  /** The call. */
+  verdict: PerceptionVerdict;
 }
 
 export interface ConversationStreamContent {
-  /** ~50 unique customer opinions that populate the drifting chip field. */
+  /** The 10–15 headline opinions that carry the readable foreground. */
   phrases: string[];
-  /** The single perception the stream converges into. */
+  /** The distant murmur — background conversation, never meant to be read. */
+  murmur: string[];
+  /** The single verdict the stream converges into. */
   perception: PerceptionCard;
 }
 
@@ -348,16 +400,17 @@ export interface GapDeviationRow {
   dev: number;
 }
 
-/** FIG. 01 — the perception-deviation instrument that replaces the old
- *  two-quote gap-demo. A calibrated levelling run: belief on the left, market
- *  reality on the right, the measured gap marked in red down the centre. */
+/** The perception-deviation exhibit. A calibrated levelling run: belief on the
+ *  left, market reality on the right, the measured gap marked in red down the
+ *  centre. It carries no figure number — the exhibit IS the section's argument,
+ *  not an illustration filed beside it. */
 export interface GapInstrumentContent {
-  figLabel: string;
-  methodLabel: string;
+  /** The three column headings — self perception, the gap, market reality. */
   leftLabel: string;
-  rightLabel: string;
   axisLabel: string;
+  rightLabel: string;
   rows: GapDeviationRow[];
+  /** The closing finding: label, value, unit, and its plain-language reading. */
   indicatorLead: string;
   indicatorValue: string;
   indicatorUnit: string;
@@ -367,67 +420,46 @@ export interface GapInstrumentContent {
 /* ---------- The Gap ---------- */
 export interface GapContent {
   opener: SectionOpener;
-  /** FIG. 01 — the perception-deviation instrument. */
+  /** The perception-deviation exhibit — the chapter's whole argument. */
   instrument: GapInstrumentContent;
-  bridge: string;
-  footnote: { id: string; text: string };
 }
 
-/* ---------- Blind Spot Matrix ---------- */
-/** A mini sentiment / metric read-out printed inside a room. */
-export interface JohariSignal {
-  label: string;
-  value: string;
-  dir: "up" | "down" | "flat";
-}
+/* ---------- Blind Spot Matrix ----------
+   Each room now holds only what the reader needs to place it and believe it.
+   The file references, source chips, sentiment read-outs and summary tiles that
+   used to sit inside these shapes were dashboard furniture; they have been
+   removed rather than hidden, so the type is the whole room. */
 
 /** One of the three "apparatus" rooms in the perception instrument. */
 export interface JohariQuad {
   id: string;
   /** Grid slot — top-left, top-right, bottom-left, bottom-right. */
   pos: "tl" | "tr" | "bl" | "br";
-  ref: string;
-  /** The one-word triage verdict — IGNORE / STUDY / UNKNOWN / CRITICAL. */
+  /** The one-word triage verdict — IGNORE / STUDY / UNKNOWN. */
   priority: string;
-  /** Legend swatch key — matches johariFramework.legend. */
+  /** Swatch key — drives the room's chip treatment. */
   swatch: "ignore" | "study" | "unknown" | "critical";
   /** Axis read-out, e.g. "YOU KNOW · THEY KNOW". */
   coord: string;
   name: string;
   tag: string;
   body: string;
-  /** Source chips — where the read comes from. */
-  evidence: string[];
-  /** Signal confidence, 0–100, drives the mini meter. */
-  confidence: number;
-  confidenceLabel: string;
-  /** Headline count, e.g. "EV 427". */
-  signalCount: string;
-  sentiment: JohariSignal[];
   quote: { text: string; source: string };
-  /** Handwritten red margin note. */
+  /** Handwritten red margin note, revealed on focus. */
   note: string;
 }
 
 /** The dark, dominant case-file room — authored as its own richer shape. */
 export interface JohariBlind {
-  tape: string;
-  ref: string;
   priority: string;
   coord: string;
   name: string;
   tag: string;
-  redactLead: string;
-  redactMid: string;
   dialogue: { dt: string; dd: string }[];
   quote: { text: string; source: string };
+  /** Signal confidence, 0–100 — the room's one and only meter. */
   confidence: number;
   confidenceLabel: string;
-  pattern: JohariSignal[];
-  evidenceStack: string[];
-  verdict: { lead: string; em1: string; mid: string; em2: string };
-  source: string;
-  note: string;
 }
 
 export interface DialogueLine {
@@ -458,10 +490,21 @@ export interface JohariFile {
  * viewport centre (scattered → grid → clusters → merge → one red point).
  */
 export interface MethodStage {
-  /** Folio number, e.g. "01". */
+  /** Stage number, e.g. "01" — printed by the live marker. */
   no: string;
-  /** The red apparatus label, e.g. "The raw voice". */
+  /**
+   * The editorial name for the stage, e.g. "The raw voice". Currently not
+   * rendered: the marker states the stage once, in the left column, and
+   * printing it again over the explanation duplicated it on screen. Kept
+   * because it is the chapter's own language for each stage.
+   */
   label: string;
+  /**
+   * The engine's own name for the stage — one terse word for the live marker,
+   * in the register of a system readout rather than editorial copy (e.g.
+   * "Intake"). It must describe what the instrument is doing in that state.
+   */
+  rail: string;
   /** Display heading. */
   heading: string;
   /** One short reading paragraph. */
@@ -546,6 +589,22 @@ export interface EngineMeta {
   staticCaption: { strong: string; rest: string };
 }
 
+/* ---------- The turn (the emotional midpoint of the issue) ----------------
+   ONE typographic block of two balanced lines: the premise, then the line
+   that overturns it. The lines are modelled as lines — not as two objects —
+   because the eye has to run out of the first straight into the second. The
+   second is split only so that its last word can take the single accent. */
+export interface Statement {
+  /** Line one. Same voice, same size as line two: this is one block. */
+  lineOne: string;
+  /** Line two, split only to colour its final word. */
+  lineTwo: {
+    lead: string;
+    /** The one accented word in the section. */
+    accent: string;
+  };
+}
+
 /* ---------- Multiplier (perception bars) ---------- */
 export interface PerceptionBar {
   label: string;
@@ -567,6 +626,19 @@ export interface LeaderItem {
   name: string;
   tag?: string;
   arrow?: boolean;
+}
+
+/* ---------- Signal sources (Always Listening — the intake) ---------- */
+
+/**
+ * One channel the market speaks through. `note` is the reason it earns its
+ * place (kept to a few words); `kind` splits the intake into the two halves the
+ * listening map brackets — solicited feedback vs. what is said unprompted.
+ */
+export interface SignalSource {
+  name: string;
+  note: string;
+  kind: "structured" | "unprompted";
 }
 
 /* ---------- Listening floor (Always Listening — the sources monitor) ---------- */
@@ -609,7 +681,7 @@ export interface ListeningContent {
     statusLabel: string; // "Live collection"
     statusNote: string; // "listening now"
     coverage: string; // "24 sources · always active"
-    ref: string; // "SS-LSN · v4.2"
+    ref: string; // "SB-LSN · v4.2"
     freshLabel: string; // "Updated"
   };
   gridLabel: string; // "Monitored sources"
@@ -620,7 +692,7 @@ export interface ListeningContent {
   stream: StreamFragment[];
   converge: {
     lead: string; // "The internet is already speaking."
-    em: string; // "Survey Surf is already listening."
+    em: string; // "Sibero is already listening."
     totalLabel: string; // "signals collected today"
     total: number; // running baseline
   };

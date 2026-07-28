@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         email,
         company: company || null,
         competitor: competitor || null,
-        message,
+        message: message ?? "",
         source: request.headers.get("referer"),
         userAgent: request.headers.get("user-agent"),
       },

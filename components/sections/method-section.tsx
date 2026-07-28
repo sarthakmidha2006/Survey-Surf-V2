@@ -1,22 +1,41 @@
 import { MethodScrolly } from "@/components/sections/method-scrolly";
+import { Reveal } from "@/components/ui/reveal";
 import { Chapter } from "@/components/ui/section";
-import { SectionHeader } from "@/components/ui/section-header";
+import { Heading, Kicker } from "@/components/ui/typography";
 import { sectionIds } from "@/lib/constants";
-import { methodOpener, methodStages } from "@/lib/content";
+import { methodIntro, methodOpener, methodStages } from "@/lib/content";
 
 /**
- * Chapter 03 — How It Works.
+ * Chapter 03 — The Intelligence Engine.
  *
- * A sticky two-column scrollytelling chapter: a single visualization (the
- * perception engine) is pinned on the left and morphs through five states —
- * scattered opinion → an ordered field → themes → a few forces → one point —
- * as the five reading blocks on the right pass the viewport centre. Many
- * customer opinions → organized research → patterns → one hidden perception.
+ * Two movements, deliberately separated:
+ *
+ *  1 · THE INTRODUCTION — a label, the headline, the deck, one paragraph and
+ *      the cue that hands the reader to the scroll. No folio, no page number,
+ *      no chapter rule: this chapter is a product page rather than a printed
+ *      spread, so the type carries the section and nothing decorates it. It is
+ *      set left on the same wide plate the experience below uses, so the label,
+ *      the headline and the copy all start on the instrument's own left edge.
+ *
+ *  2 · THE EXPERIENCE — the three-column spread (`MethodScrolly`): the pipeline
+ *      rail pinned left, the instrument pinned centre, and the five stage
+ *      explanations moving on the right. Nothing but explanation lives there.
  */
 export function MethodSection() {
   return (
-    <Chapter id={sectionIds.method}>
-      <SectionHeader opener={methodOpener} />
+    <Chapter id={sectionIds.method} className="chapter--engine">
+      <Reveal as="header" className="ms-open">
+        <Kicker className="ms-open-kick">{methodOpener.kicker}</Kicker>
+        <Heading
+          as="h2"
+          parts={methodOpener.heading}
+          className="ms-open-title"
+        />
+        <p className="ms-open-lead">{methodIntro.lead}</p>
+        <p className="ms-open-body">{methodIntro.body}</p>
+        <p className="ms-open-cue">{methodIntro.cue}</p>
+      </Reveal>
+
       <MethodScrolly stages={methodStages} />
     </Chapter>
   );

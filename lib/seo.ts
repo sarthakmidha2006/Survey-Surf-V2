@@ -24,7 +24,7 @@ export function buildMetadata({
 }: BuildMetadataOptions = {}): Metadata {
   const url = absoluteUrl(path);
   // Full title for social cards; the document <title> uses the layout's
-  // `%s — Survey Surf` template for page titles, or an absolute default.
+  // `%s — Sibero` template for page titles, or an absolute default.
   const fullTitle = title
     ? `${title} — ${siteConfig.name}`
     : `${siteConfig.name} — ${siteConfig.tagline}`;

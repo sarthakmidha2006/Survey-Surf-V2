@@ -174,7 +174,7 @@ export function HeroPlate() {
             focusable="false"
           >
             <defs>
-              <filter id="ss-duotone" colorInterpolationFilters="sRGB">
+              <filter id="sb-duotone" colorInterpolationFilters="sRGB">
                 <feColorMatrix
                   type="matrix"
                   values="0.2126 0.7152 0.0722 0 0
